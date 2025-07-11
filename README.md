@@ -6,7 +6,7 @@ Handcrafted Haven is a web application that connects artisans with buyers intere
 
 👥 Team members:<br>
 -Natanael da Matta<br>
-(add your name here)
+-Egor Sotnikov
 
 ⚙️ Tech stack:<br>
 Front-End: HTML, CSS, JavaScript, Next.js<br>
