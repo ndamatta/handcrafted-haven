@@ -6,7 +6,7 @@ Handcrafted Haven is a web application that connects artisans with buyers intere
 
 👥 Team members:<br>
 -Natanael da Matta<br>
--Egor Sotnikov
+-Egor Sotnikov<br>
 -Anderson Okai 
 
 ⚙️ Tech stack:<br>
