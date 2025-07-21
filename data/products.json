@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Handmade Ceramic Mug",
+    "image": "/products/mug.jpg",
+    "description": "A beautiful, hand-thrown ceramic mug glazed in earthy tones.",
+    "price": 28.00,
+    "seller": "Egor Sotnikov"
+  },
+  {
+    "id": "2",
+    "title": "Knitted Wool Scarf",
+    "image": "/products/scarf.jpg",
+    "description": "Cozy and warm, this scarf is made from 100% natural wool.",
+    "price": 35.00,
+    "seller": "Natanael da Matta"
+  },
+  {
+    "id": "3",
+    "title": "Wooden Jewelry Box",
+    "image": "/products/box.jpg",
+    "description": "A finely crafted jewelry box made from reclaimed wood.",
+    "price": 45.00,
+    "seller": "Okai Anderson"
+  }
+]
