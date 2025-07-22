@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Container from "../components/Container";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Container from "@/components/Container";
 import products from "../../data/products.json";
-import type { Product } from "@/lib/definitions";
+import Product, { ProductType } from "@/components/Product";
 
 export default function Home() {
   return (
@@ -23,38 +23,12 @@ export default function Home() {
 
         {/* Product Grid */}
         <section id="products" className="py-8">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-bold mb-6 text-center text-slate-800">
             Featured Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {products.map((product: Product) => (
-              <div
-                key={product.id}
-                className="bg-white dark:bg-zinc-900 rounded-xl shadow p-6 flex flex-col items-center"
-              >
-                <div className="w-32 h-32 mb-4 bg-gray-100 dark:bg-zinc-800 rounded overflow-hidden flex items-center justify-center">
-                  {/* Replace with actual images in public/products/ */}
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    width={100}
-                    height={100}
-                    className="object-cover"
-                  />
-                </div>
-                <h3 className="font-semibold text-lg mb-2 text-center">
-                  {product.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-2">
-                  {product.description}
-                </p>
-                <span className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-                  ${product.price.toFixed(2)}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  By {product.seller}
-                </span>
-              </div>
+            {products.map((product: ProductType) => (
+              <Product key={product.id} product={product} />
             ))}
           </div>
         </section>
