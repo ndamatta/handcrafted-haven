@@ -8,6 +8,7 @@ export default function Header() {
         Handcrafted Haven
       </span>
       <nav className="space-x-4">
+        <NavButton href="/seller-portal">Seller Portal</NavButton>
         <NavButton href="#features">Features</NavButton>
         <NavButton href="#products">Products</NavButton>
       </nav>

@@ -3,10 +3,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 import products from "../../data/products.json";
+import type { Product } from "@/lib/definitions";
 
 export default function Home() {
   return (
-    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-200">
+    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
       <Header />
       <Container>
         {/* Hero Section */}
@@ -14,7 +15,7 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-4 tracking-tight text-amber-400 drop-shadow-sm">
             Handcrafted Haven
           </h1>
-          <p className="text-lg sm:text-xl text-center text-slate-700">
+          <p className="text-lg sm:text-xl text-center text-slate-700 dark:text-gray-300 max-w-2xl mb-8">
             Discover, share, and celebrate unique handmade creations from
             artisans around the world.
           </p>
@@ -26,7 +27,7 @@ export default function Home() {
             Featured Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {products.map((product: any) => (
+            {products.map((product: Product) => (
               <div
                 key={product.id}
                 className="bg-white dark:bg-zinc-900 rounded-xl shadow p-6 flex flex-col items-center"
