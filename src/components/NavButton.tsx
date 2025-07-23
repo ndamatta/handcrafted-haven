@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 type NavButtonProps = {
@@ -7,12 +8,12 @@ type NavButtonProps = {
 
 function NavButton({ children, href }: NavButtonProps) {
   return (
-    <a
+    <Link
       href={href}
       className="text-white px-2 py-1 rounded transition-all hover:bg-slate-800"
     >
       {children}
-    </a>
+    </Link>
   );
 }
 
