@@ -12,10 +12,11 @@ export default function PortalHeader() {
           "use server";
           await signOut({ redirectTo: "/" });
         }}
+        className="inline-block"
       >
         <button
           type="submit"
-          className="w-full rounded-md border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 py-2 px-4 text-sm font-medium hover:bg-amber-100 dark:hover:bg-zinc-700 transition-colors"
+          className="rounded-md border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 py-2 px-4 text-sm font-medium hover:bg-amber-100 dark:hover:bg-zinc-700 transition-colors"
         >
           Sign Out
         </button>

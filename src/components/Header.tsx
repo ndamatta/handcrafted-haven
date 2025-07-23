@@ -1,8 +1,8 @@
 import Link from "next/link";
 import NavButton from "./NavButton";
 
-export default function Header() {
-  const navLinks = [
+export default function Header({ children }: { children?: React.ReactNode }) {
+  const defaultNavLinks = [
     { href: "#features", label: "Features" },
     { href: "#products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
@@ -16,13 +16,16 @@ export default function Header() {
       >
         Handcrafted Haven
       </Link>
-
       <nav className="space-x-4">
-        {navLinks.map(({ href, label }) => (
-          <NavButton key={href} href={href}>
-            {label}
-          </NavButton>
-        ))}
+        {children ? (
+          children
+        ) : (
+          defaultNavLinks.map(({ href, label }) => (
+            <NavButton key={href} href={href}>
+              {label}
+            </NavButton>
+          ))
+        )}
       </nav>
     </header>
   );
