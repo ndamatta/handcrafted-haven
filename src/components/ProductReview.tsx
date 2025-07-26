@@ -1,20 +1,23 @@
+"use client";
 // ProductReview component for displaying and submitting reviews, comments, and ratings for a product
 import React, { useState } from "react";
 
-interface Review {
+// Review type for a single product review
+export interface Review {
   user: string;
   comment: string;
   rating: number;
   date: string;
 }
 
+// Props for ProductReview: receives reviews and a callback to add a review
 interface ProductReviewProps {
-  productId: string;
   reviews: Review[];
   onAddReview: (review: Review) => void;
 }
 
-function ProductReview({ productId, reviews, onAddReview }: ProductReviewProps) {
+// Client component for product reviews
+function ProductReview({ reviews, onAddReview }: ProductReviewProps) {
   // Local state for new review form
   const [user, setUser] = useState("");
   const [comment, setComment] = useState("");
