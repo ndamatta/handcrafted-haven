@@ -2,6 +2,7 @@
 
 import { signIn } from "@/../auth";
 import { AuthError } from "next-auth";
+import { addReview } from "@/lib/queries";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -22,3 +23,11 @@ export async function authenticate(
   }
 }
 
+export async function submitReview(
+  productId: number,
+  user: string,
+  comment: string,
+  rating: number
+) {
+  await addReview(productId, user, comment, rating);
+}
