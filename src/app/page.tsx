@@ -15,6 +15,11 @@ export default async function Home() {
       <Container>
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center py-16">
+          <img
+            src="/logo.svg"
+            alt="Handcrafted Haven logo"
+            className="h-24 w-auto mb-6"
+          />
           <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-4 tracking-tight text-amber-400 drop-shadow-sm">
             Handcrafted Haven
           </h1>
