@@ -8,15 +8,15 @@ import { getAllProducts, getTotalProducts } from "@/lib/queries";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams?: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = Number(searchParams?.page ?? "1");
+  const params = await searchParams;
+  const page = Number(params?.page ?? "1");
   const pageSize = 6;
 
   const totalProducts = await getTotalProducts();
   const totalPages = Math.ceil(totalProducts / pageSize);
 
-  // Clamp page between 1 and totalPages (or 1 if no products)
   const validPage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
 
   const products = await getAllProducts({ page: validPage, pageSize });
@@ -52,7 +52,6 @@ export default async function ProductsPage({
             </div>
           )}
 
-          {/* Pagination Controls */}
           {totalProducts > pageSize && (
             <div className="flex justify-center items-center gap-4 text-sm">
               {prevPage && (
