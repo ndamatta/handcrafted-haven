@@ -6,7 +6,7 @@ import NavButton from "./NavButton";
 export default function Header({ children }: { children?: React.ReactNode }) {
   const defaultNavLinks = [
     { href: "#features", label: "Features" },
-    { href: "#products", label: "Products" },
+    { href: "/products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
 

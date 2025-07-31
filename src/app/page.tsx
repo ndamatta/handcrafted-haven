@@ -6,7 +6,8 @@ import Link from "next/link";
 import { getAllProducts } from "@/lib/queries";
 
 export default async function Home() {
-  const products: ProductType[] = await getAllProducts();
+  const pageSize = 3;
+  const products = await getAllProducts({ page: 1, pageSize });
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
@@ -29,17 +30,32 @@ export default async function Home() {
           </p>
         </section>
 
-        {/* Product Grid */}
-        <section id="products" className="py-8">
+        {/* Featured Products */}
+        <section id="featured-products" className="py-8">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
-            Products
+            Some of our products...
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {products.map((product: ProductType) => (
-              <Link key={product.id} href={`/product/${product.slug}`}>
-                <Product product={product} />
-              </Link>
-            ))}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
+            {products.length === 0 ? (
+              <p className="text-center text-gray-600 dark:text-gray-400">
+                No products found.
+              </p>
+            ) : (
+              products.map((product: ProductType) => (
+                <Link key={product.id} href={`/products/${product.slug}`}>
+                  <Product product={product} />
+                </Link>
+              ))
+            )}
+          </div>
+
+          <div className="flex justify-center">
+            <Link href="/products">
+              <button className="px-6 py-2 bg-amber-400 hover:bg-amber-500 text-slate-700 rounded font-semibold">
+                See all products...
+              </button>
+            </Link>
           </div>
         </section>
       </Container>

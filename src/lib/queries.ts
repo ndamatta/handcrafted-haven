@@ -1,21 +1,30 @@
-import postgres from 'postgres'
-import { ProductType } from '@/components/Product'
-import { Review } from '@/components/ProductReview'
+import postgres from "postgres";
+import { ProductType } from "@/components/Product";
+import { Review } from "@/components/ProductReview";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' })
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 export async function getProductBySlug(slug: string) {
   const result = await sql`
     SELECT * FROM products WHERE slug = ${slug} LIMIT 1
-  `
-  return result[0] || null
+  `;
+  return result[0] || null;
 }
 
-export async function getAllProducts(): Promise<ProductType[]> {
+export async function getAllProducts({
+  page,
+  pageSize,
+}: {
+  page: number;
+  pageSize: number;
+}): Promise<ProductType[]> {
+  const offset = (page - 1) * pageSize;
   const result = await sql`
     SELECT * FROM products
-  `
-  return result.map(row => ({
+    LIMIT ${pageSize}
+    OFFSET ${offset}
+  `;
+  return result.map((row) => ({
     id: row.id,
     slug: row.slug,
     image: row.image,
@@ -23,18 +32,20 @@ export async function getAllProducts(): Promise<ProductType[]> {
     description: row.description,
     price: Number(row.price),
     artist_name: row.artist_name,
-  }))
+  }));
 }
 
-export async function getReviewsByProductId(productId: number): Promise<Review[]> {
+export async function getReviewsByProductId(
+  productId: number
+): Promise<Review[]> {
   const result = await sql`
     SELECT user, comment, rating, date FROM reviews WHERE product_id = ${productId} ORDER BY date DESC
   `;
 
-  return result.map(row => ({
+  return result.map((row) => ({
     user: row.user,
     comment: row.comment,
-    rating: Number(row.rating), 
+    rating: Number(row.rating),
     date: row.date.toISOString(),
   }));
 }
@@ -48,5 +59,10 @@ export async function addReview(
   await sql`
     INSERT INTO reviews (product_id, user, comment, rating, date)
     VALUES (${productId}, ${user}, ${comment}, ${rating}, NOW())
-  `
+  `;
+}
+
+export async function getTotalProducts(): Promise<number> {
+  const result = await sql`SELECT COUNT(*) FROM products`;
+  return Number(result[0].count);
 }
