@@ -6,7 +6,7 @@ export default function PortalHeader() {
   return (
     <Header>
       <NavButton href="#features">Features</NavButton>
-      <NavButton href="#products">Products</NavButton>
+      <NavButton href="/products">Products</NavButton>
       <form
         action={async () => {
           "use server";
