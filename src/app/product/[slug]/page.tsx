@@ -3,6 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import ProductReview from "@/components/ProductReview";
+import AddToCartButton from "@/components/AddToCartButton";
+import WishlistButton from "@/components/WishlistButton";
+import ImageGallery from "@/components/ImageGallery";
 import { getProductBySlug, getReviewsByProductId } from "@/lib/queries";
 
 export default async function ProductPage({
@@ -40,7 +43,12 @@ export default async function ProductPage({
             <p className="text-slate-700 dark:text-gray-300 mb-4">
               {product.description}
             </p>
-            <p className="text-yellow-400">By {product.artist_name}</p>
+            <p className="text-yellow-400 mb-6">By {product.artist_name}</p>
+            
+            <div className="flex items-center space-x-4 mb-6">
+              <AddToCartButton product={product} />
+              <WishlistButton product={product} size="lg" showText />
+            </div>
           </div>
           <ProductReview productId={product.id} initialReviews={reviews} />
         </main>

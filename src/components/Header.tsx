@@ -1,10 +1,17 @@
 import React from "react";
 import Link from "next/link";
 import NavButton from "./NavButton";
+import CartIcon from "./CartIcon";
+import SearchBar from "./SearchBar";
+import { ProductType } from "./Product";
 
-export default function Header({ children }: { children?: React.ReactNode }) {
+interface HeaderProps {
+  children?: React.ReactNode;
+  products?: ProductType[];
+}
+
+export default function Header({ children, products = [] }: HeaderProps) {
   const defaultNavLinks = [
-    { href: "#features", label: "Features" },
     { href: "#products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
@@ -24,6 +31,11 @@ export default function Header({ children }: { children?: React.ReactNode }) {
         >
           Handcrafted Haven
         </Link>
+        {/* Search Bar */}
+        <div className="hidden md:block flex-1 max-w-md mx-4">
+          <SearchBar products={products} />
+        </div>
+        
         {/* Navigation links with ARIA label */}
         <nav className="space-x-4 flex items-center" aria-label="Main navigation">
           {children ? (
@@ -35,6 +47,9 @@ export default function Header({ children }: { children?: React.ReactNode }) {
               </NavButton>
             ))
           )}
+          {/* Cart Icon */}
+          <CartIcon />
+          
           {/* User profile/avatar button (placeholder) */}
           <button
             type="button"

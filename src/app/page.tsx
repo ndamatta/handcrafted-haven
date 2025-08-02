@@ -10,7 +10,7 @@ export default async function Home() {
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header />
+      <Header products={products} />
 
       <Container>
         {/* Hero Section */}
