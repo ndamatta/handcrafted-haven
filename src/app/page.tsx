@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import Product, { type ProductType } from "@/components/Product";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/queries";
 
@@ -38,6 +39,8 @@ export default async function Home() {
           </div>
         </section>
       </Container>
+
+      <RecentlyViewed />
 
       <Footer />
     </div>

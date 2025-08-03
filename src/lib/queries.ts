@@ -13,7 +13,78 @@ export async function getProductBySlug(slug: string) {
 
 export async function getAllProducts(): Promise<ProductType[]> {
   const result = await sql`
-    SELECT * FROM products
+    SELECT * FROM products ORDER BY id DESC
+  `
+  return result.map(row => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artist_name: row.artist_name,
+  }))
+}
+
+export async function searchProducts(query: string): Promise<ProductType[]> {
+  const searchTerm = `%${query}%`
+  const result = await sql`
+    SELECT * FROM products 
+    WHERE name ILIKE ${searchTerm} 
+    OR description ILIKE ${searchTerm} 
+    OR artist_name ILIKE ${searchTerm}
+    ORDER BY name ASC
+  `
+  return result.map(row => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artist_name: row.artist_name,
+  }))
+}
+
+export async function getProductsByArtist(artistName: string): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT * FROM products 
+    WHERE artist_name = ${artistName}
+    ORDER BY id DESC
+  `
+  return result.map(row => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artist_name: row.artist_name,
+  }))
+}
+
+export async function getProductsByPriceRange(minPrice: number, maxPrice: number): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT * FROM products 
+    WHERE price >= ${minPrice} AND price <= ${maxPrice}
+    ORDER BY price ASC
+  `
+  return result.map(row => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artist_name: row.artist_name,
+  }))
+}
+
+export async function getRecentProducts(limit: number = 8): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT * FROM products 
+    ORDER BY id DESC 
+    LIMIT ${limit}
   `
   return result.map(row => ({
     id: row.id,
@@ -49,4 +120,17 @@ export async function addReview(
     INSERT INTO reviews (product_id, user, comment, rating, date)
     VALUES (${productId}, ${user}, ${comment}, ${rating}, NOW())
   `
+}
+
+export async function getProductStats() {
+  const result = await sql`
+    SELECT 
+      COUNT(*) as total_products,
+      COUNT(DISTINCT artist_name) as total_artists,
+      AVG(price) as avg_price,
+      MIN(price) as min_price,
+      MAX(price) as max_price
+    FROM products
+  `
+  return result[0]
 }

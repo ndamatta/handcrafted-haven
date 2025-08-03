@@ -30,7 +30,6 @@ export default function Product({ product }: { product: ProductType }) {
           <WishlistButton product={product} size="sm" />
         </div>
       </div>
-      </div>
       <h3 className="font-semibold text-lg mb-2 text-center text-white">{product.name}</h3>
       <p className="text-gray-300 text-center text-sm mb-2 overflow-hidden">
         <span className="line-clamp-2 block">

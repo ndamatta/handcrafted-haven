@@ -14,7 +14,10 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    // Add the product with the selected quantity
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
   };

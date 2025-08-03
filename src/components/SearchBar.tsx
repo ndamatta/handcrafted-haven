@@ -14,6 +14,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<ProductType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
       return;
     }
 
+    // Use client-side filtering for immediate results
     const filtered = products.filter(product =>
       product.name.toLowerCase().includes(query.toLowerCase()) ||
       product.description.toLowerCase().includes(query.toLowerCase()) ||
@@ -44,10 +46,10 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
     setIsOpen(filtered.length > 0);
   }, [query, products]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(query);
+    if (query.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(query.trim())}`;
     }
     setIsOpen(false);
   };
@@ -78,6 +80,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
           <button
             type="button"
             onClick={() => setQuery('')}
+            aria-label="Clear search"
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,6 +122,18 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
               </div>
             </Link>
           ))}
+          
+          {filteredProducts.length > 0 && (
+            <div className="border-t border-gray-200 dark:border-gray-700 p-2">
+              <button
+                type="submit"
+                onClick={handleSearch}
+                className="w-full text-left text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                View all results for &ldquo;{query}&rdquo;
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
