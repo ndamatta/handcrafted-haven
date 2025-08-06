@@ -4,12 +4,16 @@ import Container from "@/components/Container";
 import Product, { type ProductType } from "@/components/Product";
 import Link from "next/link";
 import { getAllProducts, getTotalProducts } from "@/lib/queries";
+import { auth } from "../../../auth";
+
 
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
+  const session = await auth()
+
   const params = await searchParams;
   const page = Number(params?.page ?? "1");
   const pageSize = 6;
@@ -26,7 +30,7 @@ export default async function ProductsPage({
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header />
+      <Header isLoggedIn={!!session}/>
 
       <Container>
         <section id="products" className="py-8">

@@ -4,14 +4,17 @@ import Container from "@/components/Container";
 import Product, { type ProductType } from "@/components/Product";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/queries";
+import { auth } from "../../auth";
 
 export default async function Home() {
   const pageSize = 3;
   const products = await getAllProducts({ page: 1, pageSize });
 
+  const session = await auth();
+
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header />
+      <Header isLoggedIn={!!session} />
 
       <Container>
         {/* Hero Section */}

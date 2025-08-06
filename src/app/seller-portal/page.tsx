@@ -1,13 +1,18 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Container from "@/components/Container";
-import PortalHeader from "@/components/SellerPortal/PortalHeader";
+import { auth } from "../../../auth";
 
-export default function Page() {
+
+export default async function SellerPortalPage() {
+  const session = await auth()
   return (
     <>
-      <PortalHeader />
+      <Header isLoggedIn={!!session} />
       <Container>
         <p>TEST Seller Portal</p>
       </Container>
+      <Footer />
     </>
   );
 }
