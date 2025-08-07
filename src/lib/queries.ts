@@ -1,6 +1,8 @@
 import postgres from "postgres";
 import { ProductType } from "@/components/Product";
 import { Review } from "@/components/ProductReview";
+import type { User } from "@/lib/definitions";
+import bcrypt from "bcrypt";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -65,4 +67,38 @@ export async function addReview(
 export async function getTotalProducts(): Promise<number> {
   const result = await sql`SELECT COUNT(*) FROM products`;
   return Number(result[0].count);
+}
+
+export async function getUser(email: string): Promise<User | undefined> {
+  try {
+    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
+    return user[0];
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
+  }
+}
+
+export async function createUser(
+  email: string,
+  name: string,
+  password: string
+): Promise<User | null> {
+  // Hash the password before saving
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Check if a user with this email already exists
+  const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
+  if (existingUser.length > 0) {
+    throw new Error("User already exists");
+  }
+
+  // Add the new user to the database
+  const result = await sql<User[]>`
+    INSERT INTO users (email, name, password)
+    VALUES (${email}, ${name}, ${hashedPassword})
+    RETURNING id, email, name
+  `;
+
+  return result[0] || null;
 }
