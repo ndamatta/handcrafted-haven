@@ -31,7 +31,8 @@ export async function getAllProducts({
     name: row.name,
     description: row.description,
     price: Number(row.price),
-    artist_name: row.artist_name,
+    artisan_name: row.artisan_name,
+    category: row.category,
   }));
 }
 
