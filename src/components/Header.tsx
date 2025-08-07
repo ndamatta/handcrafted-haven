@@ -2,10 +2,16 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
+import { signOut } from "@/../auth";
 
-export default function Header({ children }: { children?: React.ReactNode }) {
+export default function Header({
+  isLoggedIn = false,
+  children,
+}: {
+  isLoggedIn?: boolean;
+  children?: React.ReactNode;
+}) {
   const defaultNavLinks = [
-    { href: "#features", label: "Features" },
     { href: "/products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
@@ -39,10 +45,7 @@ export default function Header({ children }: { children?: React.ReactNode }) {
           <span>Handcrafted Haven</span>
         </Link>
 
-        <nav
-          className="space-x-4 flex items-center"
-          aria-label="Main navigation"
-        >
+        <nav className="space-x-4 flex items-center" aria-label="Main navigation">
           {children
             ? children
             : defaultNavLinks.map(({ href, label }) => (
@@ -50,6 +53,24 @@ export default function Header({ children }: { children?: React.ReactNode }) {
                   {label}
                 </NavButton>
               ))}
+
+          {isLoggedIn && (
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirectTo: "/" });
+              }}
+              className="inline-block"
+            >
+              <button
+                type="submit"
+                className="rounded-md border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 py-2 px-4 text-sm font-medium hover:bg-amber-100 dark:hover:bg-zinc-700 transition-colors"
+              >
+                Sign Out
+              </button>
+            </form>
+          )}
+
           <button
             type="button"
             aria-label="User Profile"
@@ -68,6 +89,7 @@ export default function Header({ children }: { children?: React.ReactNode }) {
               <path d="M4 20c0-3.333 5.333-5 8-5s8 1.667 8 5" />
             </svg>
           </button>
+
           <button
             type="button"
             aria-label="Open menu"
