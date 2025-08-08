@@ -40,7 +40,10 @@ export default async function ProductPage({
             <p className="text-slate-700 dark:text-gray-300 mb-4">
               {product.description}
             </p>
-            <p className="text-yellow-400">By {product.artist_name}</p>
+            <p className="text-yellow-400">By {product.artisan_name}</p>
+            <span className="inline-block bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 text-sm font-semibold px-3 py-1 rounded-full mt-1 mb-4">
+              {product.category}
+            </span>
           </div>
           <ProductReview productId={product.id} initialReviews={reviews} />
         </main>
