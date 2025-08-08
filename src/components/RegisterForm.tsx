@@ -1,15 +1,20 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/lib/actions";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [errorMessage, formAction, isPending] = useActionState(
-    registerUser,
-    undefined
-  );
+  const [state, formAction, pending] = useActionState(registerUser, undefined);
+
+  // Redirect to portal if auto-login succeeded (message contains Redirecting)
+  useEffect(() => {
+    if (state?.ok && /Redirecting/i.test(state.message)) {
+      const t = setTimeout(() => router.push("/seller-portal"), 700);
+      return () => clearTimeout(t);
+    }
+  }, [state, router]);
 
   return (
     <form
@@ -74,14 +79,24 @@ export default function RegisterForm() {
 
       <button
         type="submit"
-        disabled={isPending}
-        className="w-full mt-2 rounded-md bg-slate-700 hover:brightness-130 duration-200 text-white text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
+        disabled={pending || (state?.ok && /Redirecting/i.test(state.message))}
+        className="w-full mt-2 rounded-md bg-slate-700 hover:brightness-130 disabled:opacity-60 duration-200 text-white text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
       >
-        {isPending ? "Registering..." : "Register"}
+        {pending
+          ? "Registering..."
+          : state?.ok && /Redirecting/i.test(state.message)
+          ? "Redirecting..."
+          : "Register"}
       </button>
 
-      {errorMessage && (
-        <p className="text-red-500 text-sm text-center mt-2">{errorMessage}</p>
+      {state && (
+        <p
+          className={`text-center text-sm mt-2 ${
+            state.ok ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {state.message}
+        </p>
       )}
 
       <button

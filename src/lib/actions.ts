@@ -2,7 +2,7 @@
 
 import { signIn } from "@/../auth";
 import { AuthError } from "next-auth";
-import { addReview, createUser } from "@/lib/queries";
+import { addReview, createUser, NewUser } from "@/lib/queries";
 import { z } from "zod";
 
 export async function authenticate(
@@ -24,10 +24,12 @@ export async function authenticate(
   }
 }
 
+export type RegisterResult = { ok: boolean; message: string };
+
 export async function registerUser(
-  prevState: string | undefined,
+  prevState: RegisterResult | undefined,
   formData: FormData
-) {
+): Promise<RegisterResult> {
   try {
     const email = formData.get("email") as string;
     const name = formData.get("name") as string;
@@ -54,23 +56,28 @@ export async function registerUser(
       throw new Error(`Validation failed: ${errors}`);
     }
 
-    const user = await createUser(email, name, password);
-
+    const user: NewUser | null = await createUser(email, name, password);
     if (!user) {
-      throw new Error("Registration failed.");
+      return { ok: false, message: "Registration failed." };
     }
 
-    return `Registration successful! Welcome, ${user.name}`;
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials.";
-        default:
-          return "Something went wrong.";
-      }
+    // try auto login
+    try {
+      await signIn("credentials", {
+        email: user.email,
+        password,
+        redirect: false,
+      });
+      return { ok: true, message: `Welcome, ${user.name}! Redirecting...` };
+    } catch {
+      return { ok: true, message: "Registration successful! Please log in." };
     }
-    return error instanceof Error ? error.message : "Something went wrong.";
+  } catch (error) {
+    // Normalize error to RegisterResult
+    if (error instanceof Error) {
+      return { ok: false, message: error.message };
+    }
+    return { ok: false, message: "Something went wrong." };
   }
 }
 

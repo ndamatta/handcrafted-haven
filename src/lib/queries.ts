@@ -79,22 +79,23 @@ export async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
+// Returned subset of user fields after creation (no password)
+export type NewUser = Pick<User, "id" | "email" | "name">;
+
 export async function createUser(
   email: string,
   name: string,
   password: string
-): Promise<User | null> {
-  // Hash the password before saving
+): Promise<NewUser | null> {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Check if a user with this email already exists
-  const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
+  const existingUser =
+    await sql`SELECT 1 FROM users WHERE email = ${email} LIMIT 1`;
   if (existingUser.length > 0) {
-    throw new Error("User already exists");
+    throw new Error(`User with email: ${email} already exists`);
   }
 
-  // Add the new user to the database
-  const result = await sql<User[]>`
+  const result = await sql<NewUser[]>`
     INSERT INTO users (email, name, password)
     VALUES (${email}, ${name}, ${hashedPassword})
     RETURNING id, email, name
