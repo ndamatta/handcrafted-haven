@@ -3,7 +3,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import ProductReview from "@/components/ProductReview";
-import { getProductBySlug, getReviewsByProductId } from "@/lib/queries";
+import AddToCartButton from "@/components/AddToCartButton";
+import WishlistButton from "@/components/WishlistButton";
+import ImageGallery from "@/components/ImageGallery";
+import ProductRecommendations from "@/components/ProductRecommendations";
+import ProductViewTracker from "@/components/ProductViewTracker";
+import { getProductBySlug, getReviewsByProductId, getAllProducts } from "@/lib/queries";
 
 export default async function ProductPage({
   params,
@@ -20,9 +25,11 @@ export default async function ProductPage({
   }
 
   const reviews = await getReviewsByProductId(product.id);
+  const allProducts = await getAllProducts();
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
+      <ProductViewTracker product={product} />
       <Header />
       <Container>
         <main className="py-16">
@@ -30,7 +37,7 @@ export default async function ProductPage({
             ← Back to Gallery
           </Link>
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-300 dark:bg-gray-700 w-full h-64 rounded-lg mb-6"></div>
+            <ImageGallery images={[product.image]} productName={product.name} />
             <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
               {product.name}
             </h1>
@@ -40,9 +47,19 @@ export default async function ProductPage({
             <p className="text-slate-700 dark:text-gray-300 mb-4">
               {product.description}
             </p>
-            <p className="text-yellow-400">By {product.artist_name}</p>
+            <p className="text-yellow-400 mb-6">By {product.artist_name}</p>
+            
+            <div className="flex items-center space-x-4 mb-6">
+              <AddToCartButton product={product} />
+              <WishlistButton product={product} size="lg" showText />
+            </div>
           </div>
           <ProductReview productId={product.id} initialReviews={reviews} />
+          
+          <ProductRecommendations 
+            currentProduct={product} 
+            allProducts={allProducts} 
+          />
         </main>
       </Container>
       <Footer />
