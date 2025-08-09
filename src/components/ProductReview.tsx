@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { submitReview } from "@/lib/actions";
 
 export interface Review {
-  user: string;
+  user_name: string;
   comment: string;
   rating: number;
   date: string;
@@ -16,25 +16,25 @@ interface ProductReviewProps {
 
 export default function ProductReview({ productId, initialReviews }: ProductReviewProps) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
-  const [user, setUser] = useState("");
+  const [user_name, setUserName] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(5);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user.trim() || !comment.trim()) return;
+    if (!user_name.trim() || !comment.trim()) return;
 
     const newReview: Review = {
-      user: user.trim(),
+      user_name: user_name.trim(),
       comment: comment.trim(),
       rating,
       date: new Date().toISOString(),
     };
 
     setReviews([newReview, ...reviews]);
-    await submitReview(productId, newReview.user, newReview.comment, newReview.rating);
+    await submitReview(productId, newReview.user_name, newReview.comment, newReview.rating);
 
-    setUser("");
+    setUserName("");
     setComment("");
     setRating(5);
   };
@@ -49,7 +49,7 @@ export default function ProductReview({ productId, initialReviews }: ProductRevi
         {reviews.map((review, idx) => (
           <li key={idx} className="mb-4 p-4 bg-slate-100 rounded">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-bold">{review.user}</span>
+              <span className="font-bold">{review.user_name}</span>
               <span className="text-yellow-500">
                 {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
               </span>
@@ -66,8 +66,8 @@ export default function ProductReview({ productId, initialReviews }: ProductRevi
         <input
           type="text"
           placeholder="Your name"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
+          value={user_name}
+          onChange={(e) => setUserName(e.target.value)}
           className="p-2 rounded border"
           required
         />
