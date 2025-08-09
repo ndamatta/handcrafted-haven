@@ -4,12 +4,14 @@ import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import ProductReview from "@/components/ProductReview";
 import { getProductBySlug, getReviewsByProductId } from "@/lib/queries";
+import { auth } from "../../../../auth";
 
 export default async function ProductPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const session = await auth()
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
@@ -23,7 +25,7 @@ export default async function ProductPage({
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header />
+      <Header isLoggedIn={!!session}/>
       <Container>
         <main className="py-16">
           <Link href="/" className="text-yellow-400 hover:underline mb-6 block">
