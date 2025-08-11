@@ -7,7 +7,7 @@ import { getAllProducts } from "@/lib/queries";
 import { auth } from "../../auth";
 
 export default async function Home() {
-  const products = await getAllProducts({ page: 1, pageSize: 3 });
+  const { products } = await getAllProducts({ page: 1, pageSize: 3 });
 
   const session = await auth();
 
