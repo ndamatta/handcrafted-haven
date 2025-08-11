@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string): Promise<ProductType | null> {
   const result = await sql`
     SELECT p.*, u.name AS artisan_name 
     FROM products p
@@ -14,7 +14,22 @@ export async function getProductBySlug(slug: string) {
     WHERE p.slug = ${slug} 
     LIMIT 1
   `;
-  return result[0] || null;
+  
+  if (!result[0]) {
+    return null;
+  }
+  
+  const row = result[0];
+  return {
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  };
 }
 
 export async function getAllProducts({
