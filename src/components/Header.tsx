@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
@@ -18,6 +20,8 @@ export default function Header({
   children,
   products = [],
 }: HeaderProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const defaultNavLinks = [
     { href: "/products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
@@ -58,13 +62,15 @@ export default function Header({
 
         {/* Navigation links with ARIA label */}
         <nav className="space-x-4 flex items-center" aria-label="Main navigation">
-          {children
-            ? children
-            : defaultNavLinks.map(({ href, label }) => (
-                <NavButton key={href} href={href}>
-                  {label}
-                </NavButton>
-              ))}
+          <div className="hidden sm:flex items-center space-x-4">
+            {children
+              ? children
+              : defaultNavLinks.map(({ href, label }) => (
+                  <NavButton key={href} href={href}>
+                    {label}
+                  </NavButton>
+                ))}
+          </div>
 
           {isLoggedIn && (
             <form
@@ -110,6 +116,7 @@ export default function Header({
             aria-label="Open menu"
             className="ml-2 p-2 rounded bg-slate-600 hover:bg-slate-500 sm:hidden"
             tabIndex={0}
+            onClick={() => setIsMenuOpen(true)}
           >
             <svg
               width="24"
@@ -126,6 +133,45 @@ export default function Header({
           </button>
         </nav>
       </header>
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 sm:hidden">
+          <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-slate-800 p-6">
+            <div className="flex justify-end">
+              <button
+                type="button"
+                aria-label="Close menu"
+                className="p-2 rounded bg-slate-600 hover:bg-slate-500"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                  strokeWidth="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <div className="mt-6">
+              <SearchBar products={products} />
+            </div>
+            <nav className="mt-6 flex flex-col space-y-4">
+              {children
+                ? children
+                : defaultNavLinks.map(({ href, label }) => (
+                    <NavButton key={href} href={href}>
+                      {label}
+                    </NavButton>
+                  ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </>
   );
 }
