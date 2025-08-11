@@ -92,11 +92,11 @@ export async function registerUser(
 
 export async function submitReview(
   productId: number,
-  user: string,
+  user_name: string,
   comment: string,
   rating: number
 ) {
-  await addReview(productId, user, comment, rating);
+  await addReview(productId, user_name, comment, rating);
 }
 
 // Create a new product for the authenticated seller

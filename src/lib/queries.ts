@@ -47,11 +47,11 @@ export async function getReviewsByProductId(
   productId: number
 ): Promise<Review[]> {
   const result = await sql`
-    SELECT user, comment, rating, date FROM reviews WHERE product_id = ${productId} ORDER BY date DESC
+    SELECT user_name, comment, rating, date FROM reviews WHERE product_id = ${productId} ORDER BY date DESC
   `;
 
   return result.map((row) => ({
-    user: row.user,
+    user_name: row.user_name,
     comment: row.comment,
     rating: Number(row.rating),
     date: row.date.toISOString(),
@@ -60,13 +60,13 @@ export async function getReviewsByProductId(
 
 export async function addReview(
   productId: number,
-  user: string,
+  user_name: string,
   comment: string,
   rating: number
 ): Promise<void> {
   await sql`
-    INSERT INTO reviews (product_id, user, comment, rating, date)
-    VALUES (${productId}, ${user}, ${comment}, ${rating}, NOW())
+    INSERT INTO reviews (product_id, user_name, comment, rating, date)
+    VALUES (${productId}, ${user_name}, ${comment}, ${rating}, NOW())
   `;
 }
 
