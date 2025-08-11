@@ -32,31 +32,146 @@ export async function getProductBySlug(slug: string): Promise<ProductType | null
   };
 }
 
+interface GetAllProductsParams {
+  page: number;
+  pageSize: number;
+  category?: string;
+  sort?: string;
+}
+
+interface GetAllProductsResult {
+  products: ProductType[];
+  totalProducts: number;
+}
+
+// Updated getAllProducts function with filtering and sorting
 export async function getAllProducts({
   page,
   pageSize,
-}: {
-  page: number;
-  pageSize: number;
-}): Promise<ProductType[]> {
+  category,
+  sort
+}: GetAllProductsParams): Promise<GetAllProductsResult> {
   const offset = (page - 1) * pageSize;
-  const result = await sql`
-    SELECT p.*, u.name AS artisan_name 
-    FROM products p
-    JOIN users u ON p.seller_id = u.id
-    LIMIT ${pageSize}
-    OFFSET ${offset}
-  `;
-  return result.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    image: row.image,
-    name: row.name,
-    description: row.description,
-    price: Number(row.price),
-    artisan_name: row.artisan_name,
-    category: row.category,
-  }));
+  
+  // Build the main query based on filters and sorting
+  let productsQuery;
+  let countQuery;
+  
+  if (category) {
+    countQuery = sql`SELECT COUNT(*) FROM products WHERE category = ${category}`;
+    
+    if (sort === 'price-low-high') {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        WHERE p.category = ${category}
+        ORDER BY p.price ASC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    } else if (sort === 'price-high-low') {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        WHERE p.category = ${category}
+        ORDER BY p.price DESC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    } else {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        WHERE p.category = ${category}
+        ORDER BY p.id DESC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    }
+  } else {
+    countQuery = sql`SELECT COUNT(*) FROM products`;
+    
+    if (sort === 'price-low-high') {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        ORDER BY p.price ASC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    } else if (sort === 'price-high-low') {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        ORDER BY p.price DESC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    } else {
+      productsQuery = sql`
+        SELECT p.*, u.name AS artisan_name 
+        FROM products p
+        JOIN users u ON p.seller_id = u.id
+        ORDER BY p.id DESC
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+    }
+  }
+  
+  try {
+    // Execute both queries
+    const [productsResult, countResult] = await Promise.all([
+      productsQuery,
+      countQuery
+    ]);
+    
+    const products = productsResult.map((row) => ({
+      id: row.id,
+      slug: row.slug,
+      image: row.image,
+      name: row.name,
+      description: row.description,
+      price: Number(row.price),
+      artisan_name: row.artisan_name,
+      category: row.category,
+    }));
+    
+    const totalProducts = Number(countResult[0].count);
+    
+    return {
+      products,
+      totalProducts
+    };
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return {
+      products: [],
+      totalProducts: 0
+    };
+  }
+}
+
+// New function to get all unique categories
+export async function getProductCategories(): Promise<string[]> {
+  try {
+    const result = await sql`
+      SELECT DISTINCT category 
+      FROM products 
+      WHERE category IS NOT NULL AND category != ''
+      ORDER BY category ASC
+    `;
+    
+    return result.map(row => row.category);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
 }
 
 export async function searchProducts(query: string): Promise<ProductType[]> {
@@ -169,9 +284,19 @@ export async function addReview(
   `;
 }
 
-export async function getTotalProducts(): Promise<number> {
-  const result = await sql`SELECT COUNT(*) FROM products`;
-  return Number(result[0].count);
+export async function getTotalProducts(category?: string): Promise<number> {
+  try {
+    let result;
+    if (category) {
+      result = await sql`SELECT COUNT(*) FROM products WHERE category = ${category}`;
+    } else {
+      result = await sql`SELECT COUNT(*) FROM products`;
+    }
+    return Number(result[0].count);
+  } catch (error) {
+    console.error('Error getting total products:', error);
+    return 0;
+  }
 }
 
 export async function getProductStats() {

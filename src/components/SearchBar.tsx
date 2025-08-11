@@ -96,7 +96,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
           {filteredProducts.map((product) => (
             <Link
               key={product.id}
-              href={`/product/${product.slug}`}
+              href={`/products/${product.slug}`}
               onClick={handleProductClick}
               className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
