@@ -39,7 +39,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
     const filtered = products.filter(product =>
       product.name.toLowerCase().includes(query.toLowerCase()) ||
       product.description.toLowerCase().includes(query.toLowerCase()) ||
-      product.artist_name.toLowerCase().includes(query.toLowerCase())
+      product.artisan_name.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 5); // Limit to 5 results
 
     setFilteredProducts(filtered);
@@ -114,7 +114,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
                   {product.name}
                 </h4>
                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                  By {product.artist_name}
+                  By {product.artisan_name}
                 </p>
                 <p className="text-sm font-semibold text-amber-400">
                   ${product.price.toFixed(2)}
