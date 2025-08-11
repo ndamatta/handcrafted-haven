@@ -3,14 +3,21 @@ import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
 import { signOut } from "@/../auth";
+import CartIcon from "./CartIcon";
+import SearchBar from "./SearchBar";
+import { ProductType } from "./Product";
+
+interface HeaderProps {
+  isLoggedIn?: boolean;
+  children?: React.ReactNode;
+  products?: ProductType[];
+}
 
 export default function Header({
   isLoggedIn = false,
   children,
-}: {
-  isLoggedIn?: boolean;
-  children?: React.ReactNode;
-}) {
+  products = [],
+}: HeaderProps) {
   const defaultNavLinks = [
     { href: "/products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
@@ -44,7 +51,12 @@ export default function Header({
           />
           <span>Handcrafted Haven</span>
         </Link>
+        {/* Search Bar */}
+        <div className="hidden md:block flex-1 max-w-md mx-4">
+          <SearchBar products={products} />
+        </div>
 
+        {/* Navigation links with ARIA label */}
         <nav className="space-x-4 flex items-center" aria-label="Main navigation">
           {children
             ? children
@@ -70,7 +82,10 @@ export default function Header({
               </button>
             </form>
           )}
+          {/* Cart Icon */}
+          <CartIcon />
 
+          {/* User profile/avatar button (placeholder) */}
           <button
             type="button"
             aria-label="User Profile"

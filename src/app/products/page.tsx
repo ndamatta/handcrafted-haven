@@ -30,7 +30,7 @@ export default async function ProductsPage({
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header isLoggedIn={!!session}/>
+      <Header isLoggedIn={!!session} products={products}/>
 
       <Container>
         <section id="products" className="py-8">

@@ -5,16 +5,16 @@ import Container from "@/components/Container";
 import ProductReview from "@/components/ProductReview";
 import AddToCartButton from "@/components/AddToCartButton";
 import { getProductBySlug, getReviewsByProductId } from "@/lib/queries";
-import { auth } from "../../../../auth";
+import { auth } from "../../../auth";
 
 export default async function ProductPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const session = await auth()
-  const { slug } = await params;
+  const { slug } = params;
   const product = await getProductBySlug(slug);
+  const session = await auth();
 
   if (!product) {
     return (
@@ -26,11 +26,11 @@ export default async function ProductPage({
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-      <Header isLoggedIn={!!session}/>
+      <Header isLoggedIn={!!session} />
       <Container>
         <main className="py-16">
-          <Link href="/products" className="text-yellow-400 hover:underline mb-6 block">
-            ← Back to Products
+          <Link href="/" className="text-yellow-400 hover:underline mb-6 block">
+            ← Back to Gallery
           </Link>
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-300 dark:bg-gray-700 w-full h-64 rounded-lg mb-6"></div>
@@ -44,12 +44,9 @@ export default async function ProductPage({
               {product.description}
             </p>
             <p className="text-yellow-400 mb-6">By {product.artisan_name}</p>
-            
-            <AddToCartButton product={product} />
-            
-            <span className="inline-block bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 text-sm font-semibold px-3 py-1 rounded-full mt-1 mb-4">
-              {product.category}
-            </span>
+            <div className="flex items-center space-x-4 mb-6">
+              <AddToCartButton product={product} />
+            </div>
           </div>
           <ProductReview productId={product.id} initialReviews={reviews} />
         </main>
