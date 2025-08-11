@@ -2,24 +2,18 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import Product, { type ProductType } from "@/components/Product";
-import RecentlyViewed from "@/components/RecentlyViewed";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/queries";
 import { auth } from "../../auth";
 
 export default async function Home() {
-  const pageSize = 3;
-  const products = await getAllProducts({ page: 1, pageSize });
+  const products = await getAllProducts({ page: 1, pageSize: 3 });
 
   const session = await auth();
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
-<<<<<<< HEAD
-      <Header isLoggedIn={!!session} />
-=======
-      <Header products={products} />
->>>>>>> 7a021a30123585db3c996e4233d6925e4b643766
+      <Header isLoggedIn={!!session} products={products} />
 
       <Container>
         {/* Hero Section */}
@@ -67,8 +61,6 @@ export default async function Home() {
           </div>
         </section>
       </Container>
-
-      <RecentlyViewed />
 
       <Footer />
     </div>

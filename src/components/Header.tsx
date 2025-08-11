@@ -2,32 +2,24 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
-<<<<<<< HEAD
 import { signOut } from "@/../auth";
-
-export default function Header({
-  isLoggedIn = false,
-  children,
-}: {
-  isLoggedIn?: boolean;
-  children?: React.ReactNode;
-}) {
-  const defaultNavLinks = [
-    { href: "/products", label: "Products" },
-=======
 import CartIcon from "./CartIcon";
 import SearchBar from "./SearchBar";
 import { ProductType } from "./Product";
 
 interface HeaderProps {
+  isLoggedIn?: boolean;
   children?: React.ReactNode;
   products?: ProductType[];
 }
 
-export default function Header({ children, products = [] }: HeaderProps) {
+export default function Header({
+  isLoggedIn = false,
+  children,
+  products = [],
+}: HeaderProps) {
   const defaultNavLinks = [
-    { href: "#products", label: "Products" },
->>>>>>> 7a021a30123585db3c996e4233d6925e4b643766
+    { href: "/products", label: "Products" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
 
@@ -59,16 +51,12 @@ export default function Header({ children, products = [] }: HeaderProps) {
           />
           <span>Handcrafted Haven</span>
         </Link>
-<<<<<<< HEAD
-
-=======
         {/* Search Bar */}
         <div className="hidden md:block flex-1 max-w-md mx-4">
           <SearchBar products={products} />
         </div>
-        
+
         {/* Navigation links with ARIA label */}
->>>>>>> 7a021a30123585db3c996e4233d6925e4b643766
         <nav className="space-x-4 flex items-center" aria-label="Main navigation">
           {children
             ? children
@@ -94,14 +82,10 @@ export default function Header({ children, products = [] }: HeaderProps) {
               </button>
             </form>
           )}
-<<<<<<< HEAD
-
-=======
           {/* Cart Icon */}
           <CartIcon />
-          
+
           {/* User profile/avatar button (placeholder) */}
->>>>>>> 7a021a30123585db3c996e4233d6925e4b643766
           <button
             type="button"
             aria-label="User Profile"
