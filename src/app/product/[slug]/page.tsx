@@ -10,9 +10,9 @@ import { auth } from "../../../auth";
 export default async function ProductPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
   const product = await getProductBySlug(slug);
   const session = await auth();
 
@@ -44,10 +44,8 @@ export default async function ProductPage({
               {product.description}
             </p>
             <p className="text-yellow-400 mb-6">By {product.artisan_name}</p>
-            
             <div className="flex items-center space-x-4 mb-6">
               <AddToCartButton product={product} />
-              <WishlistButton product={product} size="lg" showText />
             </div>
           </div>
           <ProductReview productId={product.id} initialReviews={reviews} />
