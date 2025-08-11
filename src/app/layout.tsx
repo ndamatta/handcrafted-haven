@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
+import BackToTopButton from "@/components/BackToTopButton";
 
 
 const roboto = Roboto({
@@ -26,6 +27,8 @@ export default function RootLayout({
       >
         <CartProvider>
           {children}
+          {/* Add the BackToTopButton here so it's available on all pages */}
+          <BackToTopButton />
         </CartProvider>
       </body>
     </html>
