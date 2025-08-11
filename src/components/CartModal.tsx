@@ -10,7 +10,7 @@ interface CartModalProps {
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
-  const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal, getCartCount } = useCart();
 
   if (!isOpen) return null;
 
@@ -75,7 +75,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       {item.name}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      ${item.price.toFixed(2)}
+                      ${Number(item.price).toFixed(2)}
                     </p>
                   </div>
                   
@@ -117,7 +117,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           <div className="border-t border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center justify-between mb-4">
               <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                Total: ${getCartTotal().toFixed(2)}
+                Total: ${Number(getCartTotal()).toFixed(2)}
               </span>
               <button
                 onClick={clearCart}
@@ -150,4 +150,4 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       </div>
     </div>
   );
-} 
+}

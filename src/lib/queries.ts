@@ -26,93 +26,13 @@ export async function getAllProducts({
 }): Promise<ProductType[]> {
   const offset = (page - 1) * pageSize;
   const result = await sql`
-<<<<<<< HEAD
-<<<<<<< HEAD
-    SELECT * FROM products
-=======
-    SELECT p.*, u.name AS artisan_name FROM products p
+    SELECT p.*, u.name AS artisan_name 
+    FROM products p
     JOIN users u ON p.seller_id = u.id
->>>>>>> 7fd4602d78ced0ffe0a87fd62945fb512f025557
     LIMIT ${pageSize}
     OFFSET ${offset}
   `;
   return result.map((row) => ({
-=======
-    SELECT * FROM products ORDER BY id DESC
-  `
-  return result.map(row => ({
-    id: row.id,
-    slug: row.slug,
-    image: row.image,
-    name: row.name,
-    description: row.description,
-    price: Number(row.price),
-    artist_name: row.artist_name,
-  }))
-}
-
-export async function searchProducts(query: string): Promise<ProductType[]> {
-  const searchTerm = `%${query}%`
-  const result = await sql`
-    SELECT * FROM products 
-    WHERE name ILIKE ${searchTerm} 
-    OR description ILIKE ${searchTerm} 
-    OR artist_name ILIKE ${searchTerm}
-    ORDER BY name ASC
-  `
-  return result.map(row => ({
-    id: row.id,
-    slug: row.slug,
-    image: row.image,
-    name: row.name,
-    description: row.description,
-    price: Number(row.price),
-    artist_name: row.artist_name,
-  }))
-}
-
-export async function getProductsByArtist(artistName: string): Promise<ProductType[]> {
-  const result = await sql`
-    SELECT * FROM products 
-    WHERE artist_name = ${artistName}
-    ORDER BY id DESC
-  `
-  return result.map(row => ({
-    id: row.id,
-    slug: row.slug,
-    image: row.image,
-    name: row.name,
-    description: row.description,
-    price: Number(row.price),
-    artist_name: row.artist_name,
-  }))
-}
-
-export async function getProductsByPriceRange(minPrice: number, maxPrice: number): Promise<ProductType[]> {
-  const result = await sql`
-    SELECT * FROM products 
-    WHERE price >= ${minPrice} AND price <= ${maxPrice}
-    ORDER BY price ASC
-  `
-  return result.map(row => ({
-    id: row.id,
-    slug: row.slug,
-    image: row.image,
-    name: row.name,
-    description: row.description,
-    price: Number(row.price),
-    artist_name: row.artist_name,
-  }))
-}
-
-export async function getRecentProducts(limit: number = 8): Promise<ProductType[]> {
-  const result = await sql`
-    SELECT * FROM products 
-    ORDER BY id DESC 
-    LIMIT ${limit}
-  `
-  return result.map(row => ({
->>>>>>> 7a021a30123585db3c996e4233d6925e4b643766
     id: row.id,
     slug: row.slug,
     image: row.image,
@@ -124,13 +44,96 @@ export async function getRecentProducts(limit: number = 8): Promise<ProductType[
   }));
 }
 
-export async function getReviewsByProductId(
-  productId: number
-): Promise<Review[]> {
+export async function searchProducts(query: string): Promise<ProductType[]> {
+  const searchTerm = `%${query}%`;
   const result = await sql`
-    SELECT user_name, comment, rating, date FROM reviews WHERE product_id = ${productId} ORDER BY date DESC
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    WHERE p.name ILIKE ${searchTerm} 
+       OR p.description ILIKE ${searchTerm} 
+       OR u.name ILIKE ${searchTerm}
+    ORDER BY p.name ASC
   `;
+  return result.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  }));
+}
 
+export async function getProductsByArtist(artisanName: string): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    WHERE u.name = ${artisanName}
+    ORDER BY p.id DESC
+  `;
+  return result.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  }));
+}
+
+export async function getProductsByPriceRange(minPrice: number, maxPrice: number): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    WHERE p.price >= ${minPrice} AND p.price <= ${maxPrice}
+    ORDER BY p.price ASC
+  `;
+  return result.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  }));
+}
+
+export async function getRecentProducts(limit: number = 8): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    ORDER BY p.id DESC 
+    LIMIT ${limit}
+  `;
+  return result.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  }));
+}
+
+export async function getReviewsByProductId(productId: number): Promise<Review[]> {
+  const result = await sql`
+    SELECT user_name, comment, rating, date 
+    FROM reviews 
+    WHERE product_id = ${productId} 
+    ORDER BY date DESC
+  `;
   return result.map((row) => ({
     user_name: row.user_name,
     comment: row.comment,
@@ -156,19 +159,19 @@ export async function getTotalProducts(): Promise<number> {
   return Number(result[0].count);
 }
 
-<<<<<<< HEAD
 export async function getProductStats() {
   const result = await sql`
     SELECT 
       COUNT(*) as total_products,
-      COUNT(DISTINCT artist_name) as total_artists,
+      COUNT(DISTINCT seller_id) as total_artists,
       AVG(price) as avg_price,
       MIN(price) as min_price,
       MAX(price) as max_price
     FROM products
-  `
-  return result[0]
-=======
+  `;
+  return result[0];
+}
+
 export async function getUser(email: string): Promise<User | undefined> {
   try {
     const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
@@ -179,7 +182,6 @@ export async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
-// Returned subset of user fields after creation (no password)
 export type NewUser = Pick<User, "id" | "email" | "name">;
 
 export async function createUser(
@@ -204,7 +206,6 @@ export async function createUser(
   return result[0] || null;
 }
 
-// Utility to generate a URL-friendly slug
 function slugify(input: string): string {
   return input
     .toLowerCase()
@@ -217,10 +218,11 @@ export async function getProductsBySellerId(
   sellerId: string
 ): Promise<ProductType[]> {
   const result = await sql`
-    SELECT id, slug, image, name, description, price, category, seller_id
-    FROM products
-    WHERE seller_id = ${sellerId}
-    ORDER BY id DESC
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    WHERE p.seller_id = ${sellerId}
+    ORDER BY p.id DESC
   `;
   return result.map((row) => ({
     id: row.id,
@@ -229,7 +231,7 @@ export async function getProductsBySellerId(
     name: row.name,
     description: row.description,
     price: Number(row.price),
-    artisan_name: row.seller_id, // temporary mapping if component expects artisan_name
+    artisan_name: row.artisan_name,
     category: row.category,
   }));
 }
@@ -246,7 +248,6 @@ type CreateProductInput = {
 export async function createProduct(input: CreateProductInput): Promise<void> {
   const baseSlug = slugify(input.name);
   let slug = baseSlug;
-  // Ensure slug uniqueness
   const existing = await sql`
     SELECT 1 FROM products WHERE slug = ${slug} LIMIT 1
   `;
@@ -291,7 +292,6 @@ export async function updateProductDescription({
   }
 }
 
-// Update full product (except id, seller_id). Regenerate slug if name changes.
 export async function updateProduct({
   id,
   sellerId,
@@ -317,7 +317,6 @@ export async function updateProduct({
   }
   const oldSlug = current[0].slug;
   let newSlug = oldSlug;
-  // If name changed, compute new slug & ensure uniqueness
   if (name) {
     const baseSlug = slugify(name);
     if (baseSlug !== oldSlug) {
@@ -381,5 +380,4 @@ export async function getSellerStats(sellerId: string): Promise<{
   const reviewCount = Number(reviews[0].count || 0);
   const averageRating = reviews[0].avg !== null ? Number(reviews[0].avg) : null;
   return { productCount, reviewCount, averageRating };
->>>>>>> 7fd4602d78ced0ffe0a87fd62945fb512f025557
 }
