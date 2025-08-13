@@ -1,10 +1,12 @@
 export type Product = {
-  id: string;
-  title: string;
+  id: number;
+  slug: string;
   image: string;
+  name: string;
   description: string;
   price: number;
-  seller: string;
+  artisan_name: string;
+  category: string;
 };
 
 export type User = {
@@ -12,4 +14,8 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  biography?: string | null;
+  location?: string | null;
+  years_of_experience?: number | null;
+  profile_picture?: string | null;
 };
