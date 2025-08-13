@@ -9,7 +9,11 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Handcrafted Haven",
+  metadataBase: new URL("https://handcrafted-haven.com"), // Replace with your actual domain
+  title: {
+    default: "Handcrafted Haven",
+    template: "%s | Handcrafted Haven",
+  },
   description: "Unique handmade creations from artisans around the world.",
 };
 
