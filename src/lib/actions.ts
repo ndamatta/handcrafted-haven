@@ -1,6 +1,5 @@
 "use server";
 
-import { signIn } from "@/../auth";
 import { AuthError } from "next-auth";
 import {
   addReview,
@@ -12,8 +11,12 @@ import {
   updateSellerProfile,
 } from "@/lib/queries";
 import { z } from "zod";
-import { auth } from "@/../auth";
+import { auth, signIn, signOut } from "@/../auth";
 import { revalidatePath } from "next/cache";
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/" });
+}
 
 export async function authenticate(
   prevState: string | undefined,
