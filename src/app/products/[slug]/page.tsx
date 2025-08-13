@@ -6,14 +6,41 @@ import ProductReview from "@/components/ProductReview";
 import AddToCartButton from "@/components/AddToCartButton";
 import { getProductBySlug, getReviewsByProductId, createArtisanSlug } from "@/lib/queries";
 import { auth } from "../../../../auth";
+import { Metadata } from "next";
+import { Product, WithContext } from "schema-dts";
+
+// Generate dynamic metadata
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+    };
+  }
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.image], // Assuming product.image is a full URL
+    },
+  };
+}
 
 export default async function ProductPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
   const session = await auth();
-  const { slug } = await params;
+  const { slug } = params;
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -26,8 +53,44 @@ export default async function ProductPage({
 
   const reviews = await getReviewsByProductId(product.id);
 
+  const averageRating = reviews.length
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    : 0;
+
+  // JSON-LD Structured Data
+  const structuredData: WithContext<Product> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.image, // Ensure this is an absolute URL
+    sku: String(product.id),
+    brand: {
+      "@type": "Brand",
+      name: product.artisan_name,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://handcrafted-haven-nu-six.vercel.app/products/${product.slug}`,
+      priceCurrency: "USD", // Change if needed
+      price: String(product.price),
+      availability: "https://schema.org/InStock",
+    },
+    ...(reviews.length > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: averageRating.toFixed(1),
+        reviewCount: reviews.length,
+      },
+    }),
+  };
+
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Header isLoggedIn={!!session} />
       <Container>
         <main className="py-16">
