@@ -4,7 +4,6 @@ import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
 import BackToTopButton from "@/components/BackToTopButton";
 
-
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -23,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} antialiased`}
+        className={`${roboto.variable} antialiased bg-stone-100 dark:bg-slate-900 text-slate-900 dark:text-slate-400 transition-colors duration-200`}
       >
         <CartProvider>
           {children}

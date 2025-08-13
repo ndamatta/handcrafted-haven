@@ -17,6 +17,7 @@ export default function ProductsClient({
     price: number;
     image: string;
     category: string;
+    featured?: boolean;
   }>;
 }) {
   const [editing, setEditing] = useState<EditableProduct | null>(null);
@@ -66,6 +67,7 @@ export default function ProductsClient({
                   <th className="py-2 pr-4">Name</th>
                   <th className="py-2 pr-4">Category</th>
                   <th className="py-2 pr-4">Price</th>
+                  <th className="py-2 pr-4">Featured</th>
                   <th className="py-2 pr-4">Actions</th>
                 </tr>
               </thead>
@@ -89,6 +91,15 @@ export default function ProductsClient({
                     <td className="py-2 pr-4 text-slate-600 dark:text-gray-300">
                       ${p.price.toFixed(2)}
                     </td>
+                    <td className="py-2 pr-4 text-slate-600 dark:text-gray-300">
+                      {p.featured ? (
+                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-amber-100 text-amber-800 dark:bg-amber-300/20 dark:text-amber-300">
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400">No</span>
+                      )}
+                    </td>
                     <td className="py-2 pr-4 flex gap-2">
                       <button
                         onClick={() =>
@@ -99,6 +110,7 @@ export default function ProductsClient({
                             price: p.price,
                             image: p.image,
                             category: p.category,
+                            featured: p.featured,
                           })
                         }
                         className="text-xs px-3 py-1.5 rounded-md bg-slate-700 text-white hover:brightness-110"

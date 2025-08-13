@@ -1,13 +1,11 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
-import { signOut } from "@/../auth";
 import CartIcon from "./CartIcon";
 import SearchBar from "./SearchBar";
 import { ProductType } from "./Product";
+import { signOutAction } from "@/lib/actions";
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -24,53 +22,56 @@ export default function Header({
 
   const defaultNavLinks = [
     { href: "/products", label: "Products" },
+    { href: "/artisans", label: "Artisans" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
+
+  const toggleMobileMenu = () => {
+    const menu = document.getElementById("mobileMenu");
+    if (menu) menu.classList.toggle("hidden");
+  };
 
   return (
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only absolute top-2 left-2 bg-yellow-300 text-black px-4 py-2 rounded z-50"
-        tabIndex={0}
+        className="sr-only focus:not-sr-only absolute top-2 left-2 bg-amber-400 dark:bg-amber-300 text-slate-900 dark:text-slate-800 px-4 py-2 rounded z-50"
       >
         Skip to main content
       </a>
-      <header
-        className="w-full py-4 px-6 bg-slate-700 border-b border-slate-400 shadow flex items-center justify-between"
-        role="banner"
-      >
-        <Link
-          href="/"
-          className="flex items-center space-x-3 text-xl font-bold tracking-tight text-white hover:underline"
-          tabIndex={0}
-        >
-          <Image
-            src="/logo.svg"
-            alt="Handcrafted Haven logo"
-            width={40}
-            height={40}
-            className="h-10 w-auto"
-            priority
-          />
-          <span>Handcrafted Haven</span>
-        </Link>
-        {/* Search Bar */}
-        <div className="hidden md:block flex-1 max-w-md mx-4">
-          <SearchBar products={products} />
-        </div>
+
+      <header className="w-full bg-slate-700 dark:bg-slate-800 border-b border-slate-600 dark:border-slate-700 shadow transition-colors duration-200">
+        <div className="flex items-center justify-between px-4 py-4">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center space-x-3 text-xl font-bold tracking-tight text-white hover:text-amber-300 transition-colors duration-200"
+          >
+            <Image
+              src="/logo.svg"
+              alt="Handcrafted Haven logo"
+              width={40}
+              height={40}
+              className="h-10 w-auto"
+              priority
+            />
+            <span>Handcrafted Haven</span>
+          </Link>
+
+          {/* Desktop Search */}
+          <div className="hidden md:block flex-1 max-w-md mx-4">
+            <SearchBar products={products} />
+          </div>
 
         {/* Navigation links with ARIA label */}
         <nav className="space-x-4 flex items-center" aria-label="Main navigation">
-          <div className="hidden sm:flex items-center space-x-4">
-            {children
-              ? children
-              : defaultNavLinks.map(({ href, label }) => (
-                  <NavButton key={href} href={href}>
-                    {label}
-                  </NavButton>
-                ))}
-          </div>
+          {children
+            ? children
+            : defaultNavLinks.map(({ href, label }) => (
+                <NavButton key={href} href={href}>
+                  {label}
+                </NavButton>
+              ))}
 
           {isLoggedIn && (
             <form
@@ -116,7 +117,6 @@ export default function Header({
             aria-label="Open menu"
             className="ml-2 p-2 rounded bg-slate-600 hover:bg-slate-500 sm:hidden"
             tabIndex={0}
-            onClick={() => setIsMenuOpen(true)}
           >
             <svg
               width="24"

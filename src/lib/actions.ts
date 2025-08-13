@@ -1,6 +1,5 @@
 "use server";
 
-import { signIn } from "@/../auth";
 import { AuthError } from "next-auth";
 import {
   addReview,
@@ -9,10 +8,15 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  updateSellerProfile,
 } from "@/lib/queries";
 import { z } from "zod";
-import { auth } from "@/../auth";
+import { auth, signIn, signOut } from "@/../auth";
 import { revalidatePath } from "next/cache";
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/" });
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -111,6 +115,7 @@ export type ProductResult = {
     price: string; // keep as string to avoid losing user formatting
     image: string;
     category: string;
+    featured?: string;
   };
 };
 
@@ -142,6 +147,7 @@ export async function upsertProductAction(
     price: String(formData.get("price") || ""),
     image: String(formData.get("image") || ""),
     category: String(formData.get("category") || ""),
+    featured: formData.get("featured") ? "on" : "", // checkbox semantics
   };
   const schema = z.object({
     name: z.string().min(1, "Name required"),
@@ -151,6 +157,7 @@ export async function upsertProductAction(
       .refine((v) => !Number.isNaN(Number(v)) && Number(v) >= 0, "Bad price"),
     image: z.string().url("Invalid image URL"),
     category: z.string().min(1, "Category required"),
+    featured: z.string().optional(),
   });
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
@@ -170,6 +177,7 @@ export async function upsertProductAction(
         price: Number(parsed.data.price),
         image: parsed.data.image,
         category: parsed.data.category,
+        featured: !!parsed.data.featured,
       });
       if (oldSlug !== newSlug) revalidatePath(`/products/${oldSlug}`);
       revalidatePath(`/products/${newSlug}`);
@@ -183,6 +191,7 @@ export async function upsertProductAction(
         image: parsed.data.image,
         category: parsed.data.category,
         sellerId: session.user.id,
+        featured: !!parsed.data.featured,
       });
       revalidatePath("/seller-portal/products");
       revalidatePath("/products");
@@ -212,5 +221,90 @@ export async function deleteProductAction(
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Delete failed";
     return { ok: false, message: msg };
+  }
+}
+
+// --------------- Seller Profile ---------------
+export type SellerProfileResult = {
+  ok: boolean;
+  message: string;
+  values?: {
+    name: string;
+    biography: string;
+    location: string;
+    years_of_experience: string; // keep as string for form
+    profile_picture: string;
+  };
+};
+
+export async function updateSellerProfileAction(
+  prevState: SellerProfileResult | undefined,
+  formData: FormData
+): Promise<SellerProfileResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { ok: false, message: "You must be signed in." };
+  }
+  const raw = {
+    name: String(formData.get("name") || ""),
+    biography: String(formData.get("biography") || ""),
+    location: String(formData.get("location") || ""),
+    years_of_experience: String(formData.get("years_of_experience") || ""),
+    profile_picture: String(formData.get("profile_picture") || ""),
+  };
+  const schema = z.object({
+    name: z.string().min(1, "Name required"),
+    biography: z.string().max(2000).optional(),
+    location: z.string().max(255).optional(),
+    years_of_experience: z
+      .string()
+      .optional()
+      .refine(
+        (v) =>
+          v === undefined ||
+          v === "" ||
+          (!Number.isNaN(Number(v)) && Number(v) >= 0 && Number(v) <= 100),
+        "Years of experience must be between 0 and 100"
+      ),
+    profile_picture: z
+      .string()
+      .url("Invalid image URL")
+      .or(z.literal(""))
+      .optional(),
+  });
+  const parsed = schema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: parsed.error.issues.map((i) => i.message).join(", "),
+      values: raw,
+    };
+  }
+  try {
+    await updateSellerProfile(session.user.id, {
+      name: parsed.data.name,
+      biography: raw.biography || null,
+      location: raw.location || null,
+      years_of_experience: raw.years_of_experience
+        ? Number(raw.years_of_experience)
+        : null,
+      profile_picture: raw.profile_picture || null,
+    });
+    // Revalidate account page
+    revalidatePath("/seller-portal/account");
+    return {
+      ok: true,
+      message: "Profile updated",
+      values: {
+        name: parsed.data.name,
+        biography: raw.biography,
+        location: raw.location,
+        years_of_experience: raw.years_of_experience,
+        profile_picture: raw.profile_picture,
+      },
+    };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Update failed";
+    return { ok: false, message: msg, values: raw };
   }
 }

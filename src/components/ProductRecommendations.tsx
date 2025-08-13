@@ -22,7 +22,7 @@ export default function ProductRecommendations({
     
     // First priority: same artist
     const sameArtist = otherProducts.filter(p => 
-      p.artist_name === currentProduct.artist_name
+      p.artisan_name === currentProduct.artisan_name
     );
     
     // Second priority: similar price range (±20%)

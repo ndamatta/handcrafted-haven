@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       "i.imgur.com",
       "res.cloudinary.com",
       "www.google.com",
+      "e7.pngegg.com",
     ],
   },
 };
