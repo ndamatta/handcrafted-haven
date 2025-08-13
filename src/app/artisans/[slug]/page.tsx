@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import Product, { type ProductType } from "@/components/Product";
-import { getArtisanByName, getProductsByArtist } from "@/lib/queries";
+import { getArtisanByName, getProductsByArtisanId } from "@/lib/queries";
 import { auth } from "../../../../auth";
 
 export default async function ArtisanProfilePage({
@@ -37,7 +37,7 @@ export default async function ArtisanProfilePage({
     );
   }
 
-  const products = await getProductsByArtist(artisan.name);
+  const products = await getProductsByArtisanId(artisan.id);
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-[#18181b] dark:to-[#23232a]">

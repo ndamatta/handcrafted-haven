@@ -115,6 +115,7 @@ export type ProductResult = {
     price: string; // keep as string to avoid losing user formatting
     image: string;
     category: string;
+    featured?: string;
   };
 };
 
@@ -146,6 +147,7 @@ export async function upsertProductAction(
     price: String(formData.get("price") || ""),
     image: String(formData.get("image") || ""),
     category: String(formData.get("category") || ""),
+    featured: formData.get("featured") ? "on" : "", // checkbox semantics
   };
   const schema = z.object({
     name: z.string().min(1, "Name required"),
@@ -155,6 +157,7 @@ export async function upsertProductAction(
       .refine((v) => !Number.isNaN(Number(v)) && Number(v) >= 0, "Bad price"),
     image: z.string().url("Invalid image URL"),
     category: z.string().min(1, "Category required"),
+    featured: z.string().optional(),
   });
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
@@ -174,6 +177,7 @@ export async function upsertProductAction(
         price: Number(parsed.data.price),
         image: parsed.data.image,
         category: parsed.data.category,
+        featured: !!parsed.data.featured,
       });
       if (oldSlug !== newSlug) revalidatePath(`/products/${oldSlug}`);
       revalidatePath(`/products/${newSlug}`);
@@ -187,6 +191,7 @@ export async function upsertProductAction(
         image: parsed.data.image,
         category: parsed.data.category,
         sellerId: session.user.id,
+        featured: !!parsed.data.featured,
       });
       revalidatePath("/seller-portal/products");
       revalidatePath("/products");

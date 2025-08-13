@@ -9,6 +9,7 @@ export type EditableProduct = {
   price: number | string;
   image: string;
   category: string;
+  featured?: boolean;
 };
 
 const empty: EditableProduct = {
@@ -17,6 +18,7 @@ const empty: EditableProduct = {
   price: "",
   image: "",
   category: "",
+  featured: false,
 };
 
 export default function ProductUpsertForm({
@@ -63,7 +65,11 @@ export default function ProductUpsertForm({
   // If validation failed, keep entered values
   useEffect(() => {
     if (!state.ok && state.values) {
-      setLocal((prev) => ({ ...prev, ...state.values! }));
+      setLocal((prev) => ({
+        ...prev,
+        ...state.values!,
+        featured: state.values!.featured ? true : prev.featured,
+      }));
     }
   }, [state]);
 
@@ -124,6 +130,19 @@ export default function ProductUpsertForm({
           onChange={(e) => setLocal({ ...local, image: e.target.value })}
           className="w-full rounded-md border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm"
         />
+      </div>
+      <div className="flex items-center gap-2 sm:col-span-2 pt-2">
+        <input
+          id="featured"
+          name="featured"
+          type="checkbox"
+          checked={!!local.featured}
+          onChange={(e) => setLocal({ ...local, featured: e.target.checked })}
+          className="h-4 w-4 rounded border-slate-300 dark:border-zinc-600"
+        />
+        <label htmlFor="featured" className="text-sm font-medium">
+          Featured
+        </label>
       </div>
       <div className="sm:col-span-2 flex items-center gap-3 flex-wrap">
         <button
