@@ -221,6 +221,28 @@ export async function getProductsByArtist(
   }));
 }
 
+export async function getProductsByArtisanId(
+  artisanId: string
+): Promise<ProductType[]> {
+  const result = await sql`
+    SELECT p.*, u.name AS artisan_name
+    FROM products p
+    JOIN users u ON p.seller_id = u.id
+    WHERE p.seller_id = ${artisanId}
+    ORDER BY p.id DESC
+  `;
+  return result.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    image: row.image,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    artisan_name: row.artisan_name,
+    category: row.category,
+  }));
+}
+
 export async function getProductsByPriceRange(
   minPrice: number,
   maxPrice: number
