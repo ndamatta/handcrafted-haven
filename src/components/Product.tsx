@@ -17,8 +17,8 @@ export type ProductType = {
 export default function Product({ product }: { product: ProductType }) {
   const { addToCart } = useCart();
   return (
-    <div className="bg-slate-800 rounded-xl shadow-lg p-6 flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-slate-800 border-2 border-transparent hover:border-amber-400">
-      <div className="relative w-32 h-32 mb-4 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden flex items-center justify-center">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-xl shadow-lg p-6 flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-stone-100 dark:hover:bg-slate-700 border-2 border-transparent hover:border-amber-400 dark:hover:border-amber-300">
+      <div className="relative w-32 h-32 mb-4 bg-stone-100 dark:bg-slate-700 rounded overflow-hidden flex items-center justify-center">
         <Image
           src={product.image}
           alt={product.name}
@@ -30,23 +30,23 @@ export default function Product({ product }: { product: ProductType }) {
         </div>
       </div>
 
-      <h3 className="font-semibold text-lg mb-1 text-center text-white">
+      <h3 className="font-semibold text-lg mb-1 text-center text-slate-900 dark:text-white">
         {product.name}
       </h3>
 
-      <p className="text-gray-300 text-center text-sm mb-2 line-clamp-2">
+      <p className="text-slate-500 dark:text-slate-400 text-center text-sm mb-2 line-clamp-2">
         {product.description}
       </p>
 
-      <span className="font-bold text-amber-400 mb-1">
+      <span className="font-bold text-amber-400 dark:text-amber-300 mb-1">
         ${product.price.toFixed(2)}
       </span>
 
-      <span className="text-xs text-gray-400 mb-1">
+      <span className="text-xs text-slate-400 dark:text-slate-500 mb-1">
         By {product.artisan_name}
       </span>
 
-      <span className="inline-block bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 text-xs font-semibold px-3 py-1 rounded-full mt-1">
+      <span className="inline-block bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-300 text-xs font-semibold px-3 py-1 rounded-full mt-1">
         {product.category}
       </span>
       
@@ -56,7 +56,7 @@ export default function Product({ product }: { product: ProductType }) {
           e.stopPropagation();
           addToCart(product);
         }}
-        className="bg-amber-400 hover:bg-amber-500 text-black font-semibold py-2 px-4 rounded-lg transition-colors w-full"
+        className="bg-slate-700 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 w-full mt-2"
       >
         Add to Cart
       </button>

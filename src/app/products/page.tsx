@@ -24,12 +24,10 @@ export default async function ProductsPage({
   
   const pageSize = 6;
   
-  // Get categories for the filter dropdown
   const categories = await getProductCategories();
   
-  // Get filtered and sorted products
   const { products, totalProducts } = await getAllProducts({ 
-    page: page, 
+    page, 
     pageSize,
     category: selectedCategory || undefined,
     sort: sortOrder || undefined
@@ -37,32 +35,19 @@ export default async function ProductsPage({
   
   const totalPages = Math.ceil(totalProducts / pageSize);
   const validPage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
-  
   const prevPage = validPage > 1 ? validPage - 1 : null;
   const nextPage = validPage < totalPages ? validPage + 1 : null;
 
-  // Helper function to build query string for pagination
   const buildQueryString = (newParams: Record<string, string | undefined>) => {
     const params = new URLSearchParams();
-    
-    if (newParams.page && newParams.page !== "1") {
-      params.set("page", newParams.page);
-    }
-    
-    if (newParams.category || selectedCategory) {
-      params.set("category", newParams.category || selectedCategory);
-    }
-    
-    if (newParams.sort || sortOrder) {
-      params.set("sort", newParams.sort || sortOrder);
-    }
-    
-    const queryString = params.toString();
-    return queryString ? `?${queryString}` : "";
+    if (newParams.page && newParams.page !== "1") params.set("page", newParams.page);
+    if (newParams.category || selectedCategory) params.set("category", newParams.category || selectedCategory);
+    if (newParams.sort || sortOrder) params.set("sort", newParams.sort || sortOrder);
+    return params.toString() ? `?${params.toString()}` : "";
   };
 
   return (
-    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-[#18181b] dark:to-[#23232a]">
+    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <Header isLoggedIn={!!session} products={products} />
       <Container>
         <section id="products" className="py-8">
@@ -70,14 +55,12 @@ export default async function ProductsPage({
             Products
           </h2>
           
-          {/* Filter and Sort Controls */}
           <ProductFilters 
             categories={categories}
             selectedCategory={selectedCategory}
             sortOrder={sortOrder}
           />
 
-          {/* Active Filters Display */}
           {(selectedCategory || sortOrder) && (
             <div className="flex flex-wrap gap-3 mb-6 justify-center items-center">
               {selectedCategory && (
@@ -121,11 +104,7 @@ export default async function ProductsPage({
             <div className="flex justify-center items-center gap-4 text-sm">
               {prevPage && (
                 <Link
-                  href={`/products${buildQueryString({ 
-                    category: selectedCategory || undefined,
-                    sort: sortOrder || undefined,
-                    page: prevPage.toString()
-                  })}`}
+                  href={`/products${buildQueryString({ page: prevPage.toString() })}`}
                   className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:underline"
                 >
                   ← Previous
@@ -136,11 +115,7 @@ export default async function ProductsPage({
               </span>
               {nextPage && (
                 <Link
-                  href={`/products${buildQueryString({ 
-                    category: selectedCategory || undefined,
-                    sort: sortOrder || undefined,
-                    page: nextPage.toString()
-                  })}`}
+                  href={`/products${buildQueryString({ page: nextPage.toString() })}`}
                   className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:underline"
                 >
                   Next →

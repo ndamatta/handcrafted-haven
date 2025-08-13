@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="w-full py-6 px-6 bg-slate-700 border-t border-slate-400 flex flex-col items-center gap-2 mt-8">
+    <footer className="w-full py-6 px-6 bg-slate-700 dark:bg-slate-800 border-t border-slate-600 dark:border-slate-700 flex flex-col items-center gap-2 mt-8 transition-colors duration-200">
       <p className="text-sm text-white">
         &copy; {new Date().getFullYear()} Handcrafted Haven
       </p>
@@ -13,7 +13,7 @@ function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Twitter"
-          className="hover:underline"
+          className="hover:opacity-75 transition-opacity duration-200"
         >
           <img
             src="/twitter.svg"
@@ -27,7 +27,7 @@ function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Facebook"
-          className="hover:underline"
+          className="hover:opacity-75 transition-opacity duration-200"
         >
           <img
             src="/facebook.svg"
@@ -41,7 +41,7 @@ function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram"
-          className="hover:underline"
+          className="hover:opacity-75 transition-opacity duration-200"
         >
           <img
             src="/instagram.svg"

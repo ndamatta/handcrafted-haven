@@ -12,7 +12,7 @@ export default async function Home() {
   const session = await auth();
 
   return (
-    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
+    <div className="font-sans min-h-screen flex flex-col bg-stone-100 dark:bg-slate-900 transition-colors duration-200">
       <Header isLoggedIn={!!session} products={products} />
 
       <Container>
@@ -23,10 +23,10 @@ export default async function Home() {
             alt="Handcrafted Haven logo"
             className="h-24 w-auto mb-6"
           />
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-4 tracking-tight text-amber-400 drop-shadow-sm">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-4 tracking-tight text-amber-400 dark:text-amber-300 drop-shadow-sm">
             Handcrafted Haven
           </h1>
-          <p className="text-lg sm:text-xl text-center text-slate-700 dark:text-gray-300 max-w-2xl mb-8">
+          <p className="text-lg sm:text-xl text-center text-slate-500 dark:text-slate-400 max-w-2xl mb-8">
             Discover, share, and celebrate unique handmade creations from
             artisans around the world.
           </p>
@@ -34,13 +34,13 @@ export default async function Home() {
 
         {/* Featured Products */}
         <section id="featured-products" className="py-8">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
+          <h2 className="text-2xl font-bold mb-6 text-center text-slate-900 dark:text-white">
             Some of our products...
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
             {products.length === 0 ? (
-              <p className="text-center text-gray-600 dark:text-gray-400">
+              <p className="text-center text-slate-400 dark:text-slate-500">
                 No products found.
               </p>
             ) : (
@@ -54,7 +54,7 @@ export default async function Home() {
 
           <div className="flex justify-center">
             <Link href="/products">
-              <button className="px-6 py-2 bg-amber-400 hover:bg-amber-500 text-slate-700 rounded font-semibold">
+              <button className="px-6 py-2 bg-slate-700 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded font-semibold transition-colors duration-200">
                 See all products...
               </button>
             </Link>

@@ -57,18 +57,18 @@ export default function ProductFilters({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-sm">
+    <div className="bg-stone-50 dark:bg-slate-800 rounded-xl border border-stone-200 dark:border-slate-700 p-6 mb-8 shadow-sm transition-colors duration-200">
       <div className="flex flex-col sm:flex-row gap-6 justify-center items-end">
         {/* Category Filter */}
         <div className="flex flex-col min-w-[200px]">
-          <label htmlFor="category-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="category-filter" className="text-sm font-medium text-slate-900 dark:text-white mb-2">
             Filter by Category
           </label>
           <select
             id="category-filter"
             value={selectedCategory}
             onChange={(e) => handleCategoryChange(e.target.value)}
-            className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:border-gray-400 dark:hover:border-gray-500"
+            className="px-4 py-3 border border-stone-200 dark:border-slate-600 rounded-lg bg-stone-100 dark:bg-slate-700 text-slate-900 dark:text-slate-400 focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-300 focus:border-transparent transition-all duration-200 shadow-sm hover:border-stone-300 dark:hover:border-slate-500"
           >
             <option value="">All Categories</option>
             {categories.map((category) => (
@@ -81,14 +81,14 @@ export default function ProductFilters({
 
         {/* Sort Control */}
         <div className="flex flex-col min-w-[200px]">
-          <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="sort-select" className="text-sm font-medium text-slate-900 dark:text-white mb-2">
             Sort by Price
           </label>
           <select
             id="sort-select"
             value={sortOrder}
             onChange={(e) => handleSortChange(e.target.value)}
-            className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:border-gray-400 dark:hover:border-gray-500"
+            className="px-4 py-3 border border-stone-200 dark:border-slate-600 rounded-lg bg-stone-100 dark:bg-slate-700 text-slate-900 dark:text-slate-400 focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-300 focus:border-transparent transition-all duration-200 shadow-sm hover:border-stone-300 dark:hover:border-slate-500"
           >
             <option value="">Default</option>
             <option value="price-low-high">Price: Low to High</option>
