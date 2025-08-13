@@ -20,6 +20,7 @@ export default function Header({
 }: HeaderProps) {
   const defaultNavLinks = [
     { href: "/products", label: "Products" },
+    { href: "/artisans", label: "Artisans" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
 

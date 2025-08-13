@@ -521,3 +521,135 @@ export async function getSellerStats(sellerId: string): Promise<{
   const averageRating = reviews[0].avg !== null ? Number(reviews[0].avg) : null;
   return { productCount, reviewCount, averageRating };
 }
+interface GetAllArtisansParams {
+  page: number;
+  pageSize: number;
+}
+
+interface GetAllArtisansResult {
+  artisans: (User & { product_count: number; average_rating: number | null })[];
+  totalArtisans: number;
+}
+
+export async function getAllArtisans({
+  page,
+  pageSize,
+}: GetAllArtisansParams): Promise<GetAllArtisansResult> {
+  const offset = (page - 1) * pageSize;
+  
+  try {
+    // Get artisans with their product count and average rating
+    const artisansQuery = sql`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.password,
+        u.biography,
+        u.location,
+        u.years_of_experience,
+        u.profile_picture,
+        COUNT(p.id) as product_count,
+        AVG(r.rating) as average_rating
+      FROM users u
+      LEFT JOIN products p ON u.id = p.seller_id
+      LEFT JOIN reviews r ON p.id = r.product_id
+      GROUP BY u.id, u.name, u.email, u.password, u.biography, u.location, u.years_of_experience, u.profile_picture
+      ORDER BY u.name ASC
+      LIMIT ${pageSize}
+      OFFSET ${offset}
+    `;
+
+    // Get total count of artisans (users who have products)
+    const countQuery = sql`
+      SELECT COUNT(DISTINCT u.id) as count
+      FROM users u
+      WHERE EXISTS (SELECT 1 FROM products WHERE seller_id = u.id)
+    `;
+
+    const [artisansResult, countResult] = await Promise.all([
+      artisansQuery,
+      countQuery
+    ]);
+    
+    const artisans = artisansResult.map((row) => ({
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      password: row.password,
+      biography: row.biography,
+      location: row.location,
+      years_of_experience: row.years_of_experience ? Number(row.years_of_experience) : null,
+      profile_picture: row.profile_picture,
+      product_count: Number(row.product_count),
+      average_rating: row.average_rating ? Number(row.average_rating) : null,
+    }));
+    
+    const totalArtisans = Number(countResult[0].count);
+    
+    return {
+      artisans,
+      totalArtisans
+    };
+  } catch (error) {
+    console.error('Error fetching artisans:', error);
+    return {
+      artisans: [],
+      totalArtisans: 0
+    };
+  }
+}
+
+export async function getArtisanByName(name: string): Promise<(User & { product_count: number; average_rating: number | null }) | null> {
+  try {
+    const result = await sql`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.password,
+        u.biography,
+        u.location,
+        u.years_of_experience,
+        u.profile_picture,
+        COUNT(p.id) as product_count,
+        AVG(r.rating) as average_rating
+      FROM users u
+      LEFT JOIN products p ON u.id = p.seller_id
+      LEFT JOIN reviews r ON p.id = r.product_id
+      WHERE u.name = ${name}
+      GROUP BY u.id, u.name, u.email, u.password, u.biography, u.location, u.years_of_experience, u.profile_picture
+      LIMIT 1
+    `;
+    
+    if (!result[0]) {
+      return null;
+    }
+    
+    const row = result[0];
+    return {
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      password: row.password,
+      biography: row.biography,
+      location: row.location,
+      years_of_experience: row.years_of_experience ? Number(row.years_of_experience) : null,
+      profile_picture: row.profile_picture,
+      product_count: Number(row.product_count),
+      average_rating: row.average_rating ? Number(row.average_rating) : null,
+    };
+  } catch (error) {
+    console.error('Error fetching artisan:', error);
+    return null;
+  }
+}
+
+// Function to create URL-friendly slug from artisan name
+export function createArtisanSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
