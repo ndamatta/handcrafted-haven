@@ -18,26 +18,39 @@ export default function ProductRecommendations({
 }: ProductRecommendationsProps) {
   // Get recommendations based on same artist and similar products
   const getRecommendations = () => {
-    const otherProducts = allProducts.filter(p => p.id !== currentProduct.id);
-    
-    // First priority: same artist
-    const sameArtist = otherProducts.filter(p => 
-      p.artisan_name === currentProduct.artisan_name
+    // 1. Filter out the current product
+    const otherProducts = allProducts.filter((p) => p.id !== currentProduct.id);
+
+    // 2. Find products in the same category
+    const sameCategory = otherProducts.filter(
+      (p) => p.category === currentProduct.category
     );
-    
-    // Second priority: similar price range (±20%)
-    const priceRange = currentProduct.price * 0.2;
-    const similarPrice = otherProducts.filter(p => 
-      Math.abs(p.price - currentProduct.price) <= priceRange
+
+    // 3. Find products by the same artisan
+    const sameArtisan = otherProducts.filter(
+      (p) => p.artisan_name === currentProduct.artisan_name
     );
-    
-    // Combine and remove duplicates
-    const recommendations = [...sameArtist, ...similarPrice];
-    const uniqueRecommendations = recommendations.filter((product, index, self) => 
-      index === self.findIndex(p => p.id === product.id)
-    );
-    
-    return uniqueRecommendations.slice(0, maxItems);
+
+    // 4. Combine, prioritize, and remove duplicates
+    const combined = [...sameCategory, ...sameArtisan];
+    const recommendationIds = new Set<number>();
+    const uniqueRecommendations: ProductType[] = [];
+
+    for (const product of combined) {
+      if (!recommendationIds.has(product.id)) {
+        recommendationIds.add(product.id);
+        uniqueRecommendations.push(product);
+      }
+    }
+
+    // 5. Fill with other products if we don't have enough
+    if (uniqueRecommendations.length < maxItems) {
+      const remainingProducts = otherProducts.filter(p => !recommendationIds.has(p.id));
+      const shuffledRemaining = remainingProducts.sort(() => 0.5 - Math.random());
+      uniqueRecommendations.push(...shuffledRemaining.slice(0, maxItems - uniqueRecommendations.length));
+    }
+
+    return uniqueRecommendations.slice(0, maxItems)
   };
 
   const recommendations = getRecommendations();
@@ -59,7 +72,7 @@ export default function ProductRecommendations({
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {recommendations.map((product) => (
-          <Link key={product.id} href={`/product/${product.slug}`}>
+          <Link key={product.id} href={`/products/${product.slug}`}>
             <Product product={product} />
           </Link>
         ))}
@@ -68,7 +81,7 @@ export default function ProductRecommendations({
       {recommendations.length >= maxItems && (
         <div className="text-center mt-8">
           <Link
-            href="/"
+            href="/products"
             className="inline-flex items-center px-6 py-3 bg-amber-400 hover:bg-amber-500 text-black font-semibold rounded-lg transition-colors"
           >
             View All Products

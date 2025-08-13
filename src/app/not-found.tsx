@@ -1,6 +1,11 @@
 // Custom 404 error page for better user experience
 import React from "react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "404: Page Not Found",
+};
 
 export default function NotFound() {
   return (

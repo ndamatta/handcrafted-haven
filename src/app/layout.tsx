@@ -10,8 +10,28 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Handcrafted Haven",
+  metadataBase: new URL("https://handcrafted-haven.com"), // Replace with your actual domain
+  title: {
+    default: "Handcrafted Haven",
+    template: "%s | Handcrafted Haven",
+  },
   description: "Unique handmade creations from artisans around the world.",
+  openGraph: {
+    title: "Handcrafted Haven",
+    description: "Unique handmade creations from artisans around the world.",
+    images: "/og-image.png", // Create and add an OG image to your /public folder
+    url: "https://handcrafted-haven.com", // Replace with your actual domain
+    siteName: "Handcrafted Haven",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Handcrafted Haven",
+    description: "Unique handmade creations from artisans around the world.",
+    images: ["/og-image.png"], // Create and add an OG image to your /public folder
+  },
+  robots: "index, follow",
+  icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

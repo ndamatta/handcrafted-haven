@@ -1,11 +1,13 @@
-import React from "react";
+'use client';
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavButton from "./NavButton";
 import CartIcon from "./CartIcon";
 import SearchBar from "./SearchBar";
 import { ProductType } from "./Product";
-import { signOutAction } from "@/lib/actions";
+import { signOut } from "@/../auth";
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -25,11 +27,6 @@ export default function Header({
     { href: "/artisans", label: "Artisans" },
     { href: "/seller-portal", label: "Seller Portal" },
   ];
-
-  const toggleMobileMenu = () => {
-    const menu = document.getElementById("mobileMenu");
-    if (menu) menu.classList.toggle("hidden");
-  };
 
   return (
     <>
@@ -63,15 +60,17 @@ export default function Header({
             <SearchBar products={products} />
           </div>
 
-        {/* Navigation links with ARIA label */}
-        <nav className="space-x-4 flex items-center" aria-label="Main navigation">
-          {children
-            ? children
-            : defaultNavLinks.map(({ href, label }) => (
-                <NavButton key={href} href={href}>
-                  {label}
-                </NavButton>
-              ))}
+        {/* Desktop Navigation & Actions */}
+        <nav className="hidden md:flex items-center space-x-4" aria-label="Main navigation">
+          <div className="flex items-center space-x-4">
+            {children
+              ? children
+              : defaultNavLinks.map(({ href, label }) => (
+                  <NavButton key={href} href={href}>
+                    {label}
+                  </NavButton>
+                ))}
+          </div>
 
           {isLoggedIn && (
             <form
@@ -97,7 +96,6 @@ export default function Header({
             type="button"
             aria-label="User Profile"
             className="ml-2 rounded-full bg-slate-600 hover:bg-slate-500 p-2 flex items-center justify-center"
-            tabIndex={0}
           >
             <svg
               width="24"
@@ -111,12 +109,16 @@ export default function Header({
               <path d="M4 20c0-3.333 5.333-5 8-5s8 1.667 8 5" />
             </svg>
           </button>
+        </nav>
 
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <CartIcon />
           <button
             type="button"
             aria-label="Open menu"
-            className="ml-2 p-2 rounded bg-slate-600 hover:bg-slate-500 sm:hidden"
-            tabIndex={0}
+            className="ml-2 p-2 rounded bg-slate-600 hover:bg-slate-500"
+            onClick={() => setIsMenuOpen(true)}
           >
             <svg
               width="24"
@@ -131,7 +133,7 @@ export default function Header({
               <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
           </button>
-        </nav>
+        </div>
       </header>
       {/* Mobile Menu */}
       {isMenuOpen && (
