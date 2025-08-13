@@ -19,3 +19,5 @@ export type User = {
   years_of_experience?: number | null;
   profile_picture?: string | null;
 };
+
+export type SafeUser = Omit<User, "password">;
