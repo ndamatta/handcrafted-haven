@@ -1,9 +1,9 @@
 'use client';
 
 import Image from "next/image";
-import type { User } from "@/lib/definitions";
+import type { SafeUser } from "@/lib/definitions";
 
-export default function Artisan({ artisan }: { artisan: User & { product_count: number; average_rating: number | null } }) {
+export default function Artisan({ artisan }: { artisan: SafeUser & { product_count: number; average_rating: number | null } }) {
     return (
         <div className="bg-slate-800 rounded-xl shadow-lg p-6 flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-slate-800 border-2 border-transparent hover:border-amber-400">
             <div className="relative w-20 h-20 mb-4 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden flex items-center justify-center">

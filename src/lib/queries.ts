@@ -1,12 +1,14 @@
 import postgres from "postgres";
 import { ProductType } from "@/components/Product";
 import { Review } from "@/components/ProductReview";
-import type { User } from "@/lib/definitions";
+import type { User, SafeUser } from "@/lib/definitions";
 import bcrypt from "bcrypt";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
-export async function getProductBySlug(slug: string): Promise<ProductType | null> {
+export async function getProductBySlug(
+  slug: string
+): Promise<ProductType | null> {
   const result = await sql`
     SELECT p.*, u.name AS artisan_name 
     FROM products p
@@ -14,11 +16,11 @@ export async function getProductBySlug(slug: string): Promise<ProductType | null
     WHERE p.slug = ${slug} 
     LIMIT 1
   `;
-  
+
   if (!result[0]) {
     return null;
   }
-  
+
   const row = result[0];
   return {
     id: row.id,
@@ -49,18 +51,18 @@ export async function getAllProducts({
   page,
   pageSize,
   category,
-  sort
+  sort,
 }: GetAllProductsParams): Promise<GetAllProductsResult> {
   const offset = (page - 1) * pageSize;
-  
+
   // Build the main query based on filters and sorting
   let productsQuery;
   let countQuery;
-  
+
   if (category) {
     countQuery = sql`SELECT COUNT(*) FROM products WHERE category = ${category}`;
-    
-    if (sort === 'price-low-high') {
+
+    if (sort === "price-low-high") {
       productsQuery = sql`
         SELECT p.*, u.name AS artisan_name 
         FROM products p
@@ -70,7 +72,7 @@ export async function getAllProducts({
         LIMIT ${pageSize}
         OFFSET ${offset}
       `;
-    } else if (sort === 'price-high-low') {
+    } else if (sort === "price-high-low") {
       productsQuery = sql`
         SELECT p.*, u.name AS artisan_name 
         FROM products p
@@ -93,8 +95,8 @@ export async function getAllProducts({
     }
   } else {
     countQuery = sql`SELECT COUNT(*) FROM products`;
-    
-    if (sort === 'price-low-high') {
+
+    if (sort === "price-low-high") {
       productsQuery = sql`
         SELECT p.*, u.name AS artisan_name 
         FROM products p
@@ -103,7 +105,7 @@ export async function getAllProducts({
         LIMIT ${pageSize}
         OFFSET ${offset}
       `;
-    } else if (sort === 'price-high-low') {
+    } else if (sort === "price-high-low") {
       productsQuery = sql`
         SELECT p.*, u.name AS artisan_name 
         FROM products p
@@ -123,14 +125,14 @@ export async function getAllProducts({
       `;
     }
   }
-  
+
   try {
     // Execute both queries
     const [productsResult, countResult] = await Promise.all([
       productsQuery,
-      countQuery
+      countQuery,
     ]);
-    
+
     const products = productsResult.map((row) => ({
       id: row.id,
       slug: row.slug,
@@ -141,18 +143,18 @@ export async function getAllProducts({
       artisan_name: row.artisan_name,
       category: row.category,
     }));
-    
+
     const totalProducts = Number(countResult[0].count);
-    
+
     return {
       products,
-      totalProducts
+      totalProducts,
     };
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
     return {
       products: [],
-      totalProducts: 0
+      totalProducts: 0,
     };
   }
 }
@@ -166,10 +168,10 @@ export async function getProductCategories(): Promise<string[]> {
       WHERE category IS NOT NULL AND category != ''
       ORDER BY category ASC
     `;
-    
-    return result.map(row => row.category);
+
+    return result.map((row) => row.category);
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error("Error fetching categories:", error);
     return [];
   }
 }
@@ -197,7 +199,9 @@ export async function searchProducts(query: string): Promise<ProductType[]> {
   }));
 }
 
-export async function getProductsByArtist(artisanName: string): Promise<ProductType[]> {
+export async function getProductsByArtist(
+  artisanName: string
+): Promise<ProductType[]> {
   const result = await sql`
     SELECT p.*, u.name AS artisan_name
     FROM products p
@@ -217,7 +221,10 @@ export async function getProductsByArtist(artisanName: string): Promise<ProductT
   }));
 }
 
-export async function getProductsByPriceRange(minPrice: number, maxPrice: number): Promise<ProductType[]> {
+export async function getProductsByPriceRange(
+  minPrice: number,
+  maxPrice: number
+): Promise<ProductType[]> {
   const result = await sql`
     SELECT p.*, u.name AS artisan_name
     FROM products p
@@ -237,7 +244,9 @@ export async function getProductsByPriceRange(minPrice: number, maxPrice: number
   }));
 }
 
-export async function getRecentProducts(limit: number = 8): Promise<ProductType[]> {
+export async function getRecentProducts(
+  limit: number = 8
+): Promise<ProductType[]> {
   const result = await sql`
     SELECT p.*, u.name AS artisan_name
     FROM products p
@@ -257,7 +266,9 @@ export async function getRecentProducts(limit: number = 8): Promise<ProductType[
   }));
 }
 
-export async function getReviewsByProductId(productId: number): Promise<Review[]> {
+export async function getReviewsByProductId(
+  productId: number
+): Promise<Review[]> {
   const result = await sql`
     SELECT user_name, comment, rating, date 
     FROM reviews 
@@ -288,13 +299,14 @@ export async function getTotalProducts(category?: string): Promise<number> {
   try {
     let result;
     if (category) {
-      result = await sql`SELECT COUNT(*) FROM products WHERE category = ${category}`;
+      result =
+        await sql`SELECT COUNT(*) FROM products WHERE category = ${category}`;
     } else {
       result = await sql`SELECT COUNT(*) FROM products`;
     }
     return Number(result[0].count);
   } catch (error) {
-    console.error('Error getting total products:', error);
+    console.error("Error getting total products:", error);
     return 0;
   }
 }
@@ -527,7 +539,10 @@ interface GetAllArtisansParams {
 }
 
 interface GetAllArtisansResult {
-  artisans: (User & { product_count: number; average_rating: number | null })[];
+  artisans: (SafeUser & {
+    product_count: number;
+    average_rating: number | null;
+  })[];
   totalArtisans: number;
 }
 
@@ -536,7 +551,7 @@ export async function getAllArtisans({
   pageSize,
 }: GetAllArtisansParams): Promise<GetAllArtisansResult> {
   const offset = (page - 1) * pageSize;
-  
+
   try {
     // Get artisans with their product count and average rating
     const artisansQuery = sql`
@@ -544,7 +559,6 @@ export async function getAllArtisans({
         u.id,
         u.name,
         u.email,
-        u.password,
         u.biography,
         u.location,
         u.years_of_experience,
@@ -554,7 +568,7 @@ export async function getAllArtisans({
       FROM users u
       LEFT JOIN products p ON u.id = p.seller_id
       LEFT JOIN reviews r ON p.id = r.product_id
-      GROUP BY u.id, u.name, u.email, u.password, u.biography, u.location, u.years_of_experience, u.profile_picture
+      GROUP BY u.id, u.name, u.email, u.biography, u.location, u.years_of_experience, u.profile_picture
       ORDER BY u.name ASC
       LIMIT ${pageSize}
       OFFSET ${offset}
@@ -569,45 +583,49 @@ export async function getAllArtisans({
 
     const [artisansResult, countResult] = await Promise.all([
       artisansQuery,
-      countQuery
+      countQuery,
     ]);
-    
+
     const artisans = artisansResult.map((row) => ({
       id: row.id,
       name: row.name,
       email: row.email,
-      password: row.password,
       biography: row.biography,
       location: row.location,
-      years_of_experience: row.years_of_experience ? Number(row.years_of_experience) : null,
+      years_of_experience: row.years_of_experience
+        ? Number(row.years_of_experience)
+        : null,
       profile_picture: row.profile_picture,
       product_count: Number(row.product_count),
       average_rating: row.average_rating ? Number(row.average_rating) : null,
     }));
-    
+
     const totalArtisans = Number(countResult[0].count);
-    
+
     return {
       artisans,
-      totalArtisans
+      totalArtisans,
     };
   } catch (error) {
-    console.error('Error fetching artisans:', error);
+    console.error("Error fetching artisans:", error);
     return {
       artisans: [],
-      totalArtisans: 0
+      totalArtisans: 0,
     };
   }
 }
 
-export async function getArtisanByName(name: string): Promise<(User & { product_count: number; average_rating: number | null }) | null> {
+export async function getArtisanByName(
+  name: string
+): Promise<
+  (SafeUser & { product_count: number; average_rating: number | null }) | null
+> {
   try {
     const result = await sql`
       SELECT 
         u.id,
         u.name,
         u.email,
-        u.password,
         u.biography,
         u.location,
         u.years_of_experience,
@@ -618,29 +636,30 @@ export async function getArtisanByName(name: string): Promise<(User & { product_
       LEFT JOIN products p ON u.id = p.seller_id
       LEFT JOIN reviews r ON p.id = r.product_id
       WHERE u.name = ${name}
-      GROUP BY u.id, u.name, u.email, u.password, u.biography, u.location, u.years_of_experience, u.profile_picture
+      GROUP BY u.id, u.name, u.email, u.biography, u.location, u.years_of_experience, u.profile_picture
       LIMIT 1
     `;
-    
+
     if (!result[0]) {
       return null;
     }
-    
+
     const row = result[0];
     return {
       id: row.id,
       name: row.name,
       email: row.email,
-      password: row.password,
       biography: row.biography,
       location: row.location,
-      years_of_experience: row.years_of_experience ? Number(row.years_of_experience) : null,
+      years_of_experience: row.years_of_experience
+        ? Number(row.years_of_experience)
+        : null,
       profile_picture: row.profile_picture,
       product_count: Number(row.product_count),
       average_rating: row.average_rating ? Number(row.average_rating) : null,
     };
   } catch (error) {
-    console.error('Error fetching artisan:', error);
+    console.error("Error fetching artisan:", error);
     return null;
   }
 }
@@ -652,4 +671,64 @@ export function createArtisanSlug(name: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
+}
+
+// ---------------- Seller Profile ----------------
+export async function getSellerProfile(
+  sellerId: string
+): Promise<SafeUser | null> {
+  try {
+    const result = await sql`
+      SELECT id, name, email, biography, location, years_of_experience, profile_picture
+      FROM users
+      WHERE id = ${sellerId}
+      LIMIT 1
+    `;
+    if (!result[0]) return null;
+    const row = result[0];
+    return {
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      biography: row.biography,
+      location: row.location,
+      years_of_experience:
+        row.years_of_experience !== null
+          ? Number(row.years_of_experience)
+          : null,
+      profile_picture: row.profile_picture,
+    } as SafeUser;
+  } catch (e) {
+    console.error("Failed to fetch seller profile", e);
+    return null;
+  }
+}
+
+type UpdateSellerProfileInput = {
+  name: string;
+  biography?: string | null;
+  location?: string | null;
+  years_of_experience?: number | null;
+  profile_picture?: string | null;
+};
+
+export async function updateSellerProfile(
+  sellerId: string,
+  data: UpdateSellerProfileInput
+): Promise<void> {
+  const { name, biography, location, years_of_experience, profile_picture } =
+    data;
+  const updated = await sql<{ id: string }[]>`
+    UPDATE users
+    SET name = ${name},
+  biography = ${biography ?? null},
+  location = ${location ?? null},
+  years_of_experience = ${years_of_experience ?? null},
+  profile_picture = ${profile_picture ?? null}
+    WHERE id = ${sellerId}
+    RETURNING id
+  `;
+  if (updated.length === 0) {
+    throw new Error("Profile update failed");
+  }
 }

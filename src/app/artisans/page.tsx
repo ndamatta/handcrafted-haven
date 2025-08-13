@@ -5,7 +5,7 @@ import Artisan from "@/components/Artisan";
 import Link from "next/link";
 import { getAllArtisans, createArtisanSlug } from "@/lib/queries";
 import { auth } from "../../../auth";
-import type { User } from "@/lib/definitions";
+import type { SafeUser } from "@/lib/definitions";
 
 export default async function ArtisansPage({
   searchParams,
@@ -65,7 +65,7 @@ export default async function ArtisansPage({
             </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-              {artisans.map((artisan: User & { product_count: number; average_rating: number | null }) => (
+              {artisans.map((artisan: SafeUser & { product_count: number; average_rating: number | null }) => (
                 <Link key={artisan.id} href={`/artisans/${createArtisanSlug(artisan.name)}`}>
                   <Artisan artisan={artisan} />
                 </Link>
