@@ -385,6 +385,7 @@ export async function getProductsBySellerId(
     price: Number(row.price),
     artisan_name: row.artisan_name,
     category: row.category,
+    featured: row.featured ?? false,
   }));
 }
 
@@ -395,6 +396,7 @@ type CreateProductInput = {
   image: string;
   category: string;
   sellerId: string;
+  featured?: boolean;
 };
 
 export async function createProduct(input: CreateProductInput): Promise<void> {
@@ -407,9 +409,8 @@ export async function createProduct(input: CreateProductInput): Promise<void> {
     const suffix = Math.random().toString(36).slice(2, 8);
     slug = `${baseSlug}-${suffix}`;
   }
-
   await sql`
-    INSERT INTO products (slug, image, name, description, price, seller_id, category)
+    INSERT INTO products (slug, image, name, description, price, seller_id, category, featured)
     VALUES (
       ${slug},
       ${input.image},
@@ -417,7 +418,8 @@ export async function createProduct(input: CreateProductInput): Promise<void> {
       ${input.description},
       ${input.price},
       ${input.sellerId},
-      ${input.category}
+      ${input.category},
+      ${input.featured ?? false}
     )
   `;
 }
@@ -452,6 +454,7 @@ export async function updateProduct({
   price,
   image,
   category,
+  featured,
 }: {
   id: number;
   sellerId: string;
@@ -460,6 +463,7 @@ export async function updateProduct({
   price: number;
   image: string;
   category: string;
+  featured?: boolean;
 }): Promise<{ newSlug: string; oldSlug: string }> {
   const current = await sql<{ slug: string }[]>`
     SELECT slug FROM products WHERE id = ${id} AND seller_id = ${sellerId} LIMIT 1
@@ -489,7 +493,8 @@ export async function updateProduct({
         description = ${description},
         price = ${price},
         image = ${image},
-        category = ${category}
+        category = ${category},
+        featured = ${featured ?? false}
     WHERE id = ${id} AND seller_id = ${sellerId}
     RETURNING id
   `;
