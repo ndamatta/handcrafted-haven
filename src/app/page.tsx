@@ -62,14 +62,7 @@ export default async function Home() {
             <div className="flex justify-center">
               <Link
                 href="/products"
-                className="px-6 py-2 bg-slate-700 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded font-semibold transition-colors duration-200"
-              >
-                See all products...
-              </Link>
-            </div>
-          </section>
-        </Container>
-      </main>
+                className="px-6 py-2 bg-slate-700 hover:bg-slate-800 dark:bg
       <Footer />
     </div>
   );
