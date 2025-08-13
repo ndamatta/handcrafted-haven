@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const links: { href: string; label: string; icon?: React.ReactNode }[] = [
+const links: { href: string; label: string }[] = [
   { href: "/seller-portal", label: "Overview" },
   { href: "/seller-portal/products", label: "Products" },
   { href: "/seller-portal/account", label: "Account" },
@@ -12,10 +12,11 @@ const links: { href: string; label: string; icon?: React.ReactNode }[] = [
 
 export default function SideNav() {
   const pathname = usePathname();
+
   return (
     <nav
       aria-label="Seller navigation"
-      className="h-full rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 shadow p-4"
+      className="h-full rounded-xl bg-stone-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow p-4"
     >
       <ul className="space-y-1 flex flex-col h-full">
         {links.map(({ href, label }) => {
@@ -28,7 +29,7 @@ export default function SideNav() {
                   ${
                     active
                       ? "bg-slate-700 text-white shadow"
-                      : "text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700"
                   }
                 `}
               >

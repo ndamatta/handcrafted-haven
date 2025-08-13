@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,6 @@ export default function RegisterForm() {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(registerUser, undefined);
 
-  // Redirect to portal if auto-login succeeded (message contains Redirecting)
   useEffect(() => {
     if (state?.ok && /Redirecting/i.test(state.message)) {
       const t = setTimeout(() => router.push("/seller-portal"), 700);
@@ -19,16 +18,16 @@ export default function RegisterForm() {
   return (
     <form
       action={formAction}
-      className="max-w-md mx-auto w-full bg-white dark:bg-zinc-900 rounded-xl shadow p-6 space-y-4"
+      className="max-w-md mx-auto w-full bg-stone-50 dark:bg-slate-800 rounded-xl shadow-lg p-6 space-y-4"
     >
-      <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">
+      <h1 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-4">
         Create an account
       </h1>
 
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-slate-900 dark:text-white mb-1"
         >
           Email
         </label>
@@ -38,14 +37,14 @@ export default function RegisterForm() {
           type="email"
           required
           placeholder="Enter your email"
-          className="w-full rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
       </div>
 
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-slate-900 dark:text-white mb-1"
         >
           Name
         </label>
@@ -55,14 +54,14 @@ export default function RegisterForm() {
           type="text"
           required
           placeholder="Enter your name"
-          className="w-full rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
       </div>
 
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-slate-900 dark:text-white mb-1"
         >
           Password
         </label>
@@ -73,14 +72,14 @@ export default function RegisterForm() {
           required
           minLength={6}
           placeholder="Enter your password"
-          className="w-full rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
       </div>
 
       <button
         type="submit"
         disabled={pending || (state?.ok && /Redirecting/i.test(state.message))}
-        className="w-full mt-2 rounded-md bg-slate-700 hover:brightness-130 disabled:opacity-60 duration-200 text-white text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
+        className="w-full mt-2 rounded-md bg-slate-700 dark:bg-slate-600 hover:brightness-110 disabled:opacity-60 text-white text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
       >
         {pending
           ? "Registering..."
@@ -102,7 +101,7 @@ export default function RegisterForm() {
       <button
         type="button"
         onClick={() => router.push("/login?mode=login")}
-        className="w-full mt-2 rounded-md bg-gray-300 hover:bg-gray-400 duration-200 text-gray-700 text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
+        className="w-full mt-2 rounded-md bg-stone-200 dark:bg-slate-700 hover:brightness-110 text-slate-900 dark:text-white text-sm font-medium py-2 px-4 transition-colors cursor-pointer"
       >
         Back to Login
       </button>

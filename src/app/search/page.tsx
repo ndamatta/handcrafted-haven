@@ -55,7 +55,7 @@ async function SearchResults({ query }: { query: string }) {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product: ProductType) => (
-          <Link key={product.id} href={`/product/${product.slug}`}>
+          <Link key={product.id} href={`/products/${product.slug}`}>
             <Product product={product} />
           </Link>
         ))}
@@ -69,7 +69,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   
   if (!query || query.trim() === '') {
     return (
-      <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
+      <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <Header />
         <Container>
           <main className="py-16">
@@ -95,7 +95,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray--100 dark:from-[#18181b] dark:to-[#23232a]">
+    <div className="font-sans min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <Header />
       <Container>
         <main className="py-16">
@@ -112,4 +112,4 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <Footer />
     </div>
   );
-} 
+}

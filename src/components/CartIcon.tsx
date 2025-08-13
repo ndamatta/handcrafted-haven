@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useCart } from './CartContext';
@@ -13,7 +13,7 @@ export default function CartIcon() {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="relative ml-2 rounded-full bg-slate-600 hover:bg-slate-500 p-2 flex items-center justify-center transition-colors"
+        className="relative ml-2 rounded-full bg-slate-700 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-500 p-2 flex items-center justify-center transition-colors"
         aria-label="Shopping cart"
       >
         <svg
@@ -30,7 +30,7 @@ export default function CartIcon() {
         </svg>
 
         {itemCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-amber-400 text-black text-[0.65rem] rounded-full h-5 min-w-[20px] px-[2px] flex items-center justify-center font-bold">
+          <span className="absolute -top-1 -right-1 bg-amber-400 dark:bg-amber-300 text-slate-900 dark:text-slate-900 text-[0.65rem] rounded-full h-5 min-w-[20px] px-[2px] flex items-center justify-center font-bold">
             {itemCount > 99 ? '99+' : itemCount}
           </span>
         )}

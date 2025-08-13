@@ -35,17 +35,17 @@ export default function Header({
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only absolute top-2 left-2 bg-yellow-300 text-black px-4 py-2 rounded z-50"
+        className="sr-only focus:not-sr-only absolute top-2 left-2 bg-amber-400 dark:bg-amber-300 text-slate-900 dark:text-slate-800 px-4 py-2 rounded z-50"
       >
         Skip to main content
       </a>
 
-      <header className="w-full bg-slate-700 border-b border-slate-400 shadow">
+      <header className="w-full bg-slate-700 dark:bg-slate-800 border-b border-slate-600 dark:border-slate-700 shadow transition-colors duration-200">
         <div className="flex items-center justify-between px-4 py-4">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-3 text-xl font-bold tracking-tight text-white hover:underline"
+            className="flex items-center space-x-3 text-xl font-bold tracking-tight text-white hover:text-amber-300 transition-colors duration-200"
           >
             <Image
               src="/logo.svg"
@@ -76,7 +76,7 @@ export default function Header({
               <form action={signOutAction}>
                 <button
                   type="submit"
-                  className="rounded-md border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 py-2 px-4 text-sm font-medium hover:bg-amber-100 dark:hover:bg-zinc-700 transition-colors"
+                  className="rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-slate-400 py-2 px-4 text-sm font-medium hover:bg-stone-100 dark:hover:bg-slate-600 transition-colors duration-200"
                 >
                   Sign Out
                 </button>
@@ -90,7 +90,7 @@ export default function Header({
             <button
               type="button"
               aria-label="Toggle mobile menu"
-              className="p-2 rounded bg-slate-600 hover:bg-slate-500"
+              className="p-2 rounded bg-slate-600 hover:bg-slate-500 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors duration-200"
               onClick={toggleMobileMenu}
             >
               <svg
@@ -125,7 +125,7 @@ export default function Header({
               <form action={signOutAction}>
                 <button
                   type="submit"
-                  className="rounded-md border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 py-2 px-4 text-sm font-medium hover:bg-amber-100 dark:hover:bg-zinc-700 transition-colors w-full text-left"
+                  className="rounded-md border border-stone-200 dark:border-slate-600 bg-stone-50 dark:bg-slate-700 text-slate-900 dark:text-slate-400 py-2 px-4 text-sm font-medium hover:bg-stone-100 dark:hover:bg-slate-600 transition-colors duration-200 w-full text-left"
                 >
                   Sign Out
                 </button>
