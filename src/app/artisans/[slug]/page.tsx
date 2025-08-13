@@ -14,10 +14,10 @@ export default async function ArtisanProfilePage({
 }) {
   const session = await auth();
   const { slug } = await params;
-  
-  // Convert slug back to name (this is a simple approach - in production you might want a proper slug-to-name mapping)
-  const artisanName = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  
+
+  // Convert slug back to name (simple approach)
+  const artisanName = slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+
   const artisan = await getArtisanByName(artisanName);
 
   if (!artisan) {
@@ -47,7 +47,7 @@ export default async function ArtisanProfilePage({
           <Link href="/artisans" className="text-yellow-400 hover:underline mb-6 block">
             ← Back to Artisans
           </Link>
-          
+
           <div className="max-w-4xl mx-auto">
             {/* Artisan Profile Header */}
             <div className="bg-slate-800 rounded-xl shadow-lg p-8 mb-8">
@@ -71,14 +71,10 @@ export default async function ArtisanProfilePage({
 
                 {/* Artisan Info */}
                 <div className="flex-1 text-center md:text-left">
-                  <h1 className="text-4xl font-bold mb-4 text-white">
-                    {artisan.name}
-                  </h1>
-                  
+                  <h1 className="text-4xl font-bold mb-4 text-white">{artisan.name}</h1>
+
                   {artisan.biography && (
-                    <p className="text-gray-300 mb-4 leading-relaxed">
-                      {artisan.biography}
-                    </p>
+                    <p className="text-gray-300 mb-4 leading-relaxed">{artisan.biography}</p>
                   )}
 
                   {/* Stats */}
@@ -122,10 +118,10 @@ export default async function ArtisanProfilePage({
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-300">
                 Products by {artisan.name}
               </h2>
-              
+
               {products.length === 0 ? (
                 <p className="text-center text-gray-600 dark:text-gray-400 py-8">
-                  This artisan hasn't listed any products yet.
+                  This artisan hasn&apos;t listed any products yet.
                 </p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
