@@ -6,6 +6,8 @@ import ProductReview from "@/components/ProductReview";
 import AddToCartButton from "@/components/AddToCartButton";
 import { getProductBySlug, getReviewsByProductId, createArtisanSlug } from "@/lib/queries";
 import { auth } from "../../../../auth";
+import Image from "next/image";
+import { safeSrc } from "@/lib/imageUtils";
 
 export default async function ProductPage({
   params,
@@ -37,7 +39,16 @@ export default async function ProductPage({
 
           <div className="max-w-4xl mx-auto">
             {/* Product Image */}
-            <div className="bg-gray-200 dark:bg-gray-700 w-full h-64 rounded-lg mb-6 shadow-sm"></div>
+            <div className="w-full h-64 rounded-lg mb-6 shadow-sm overflow-hidden">
+              <Image
+                src={safeSrc(product.image, "product")}
+                alt={product.name}
+                width={1200}
+                height={600}
+                className="w-full h-full object-cover bg-gray-200 dark:bg-gray-700"
+                priority
+              />
+            </div>
 
             {/* Product Info */}
             <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">

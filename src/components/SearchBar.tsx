@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ProductType } from './Product';
 import Link from 'next/link';
 import Image from 'next/image';
+import { safeSrc } from '@/lib/imageUtils';
 
 interface SearchBarProps {
   products: ProductType[];
@@ -97,7 +98,7 @@ export default function SearchBar({ products, onSearch }: SearchBarProps) {
             >
               <div className="w-12 h-12 bg-stone-100 dark:bg-slate-700 rounded overflow-hidden flex-shrink-0">
                 <Image
-                  src={product.image}
+                  src={safeSrc(product.image, 'product')}
                   alt={product.name}
                   width={48}
                   height={48}

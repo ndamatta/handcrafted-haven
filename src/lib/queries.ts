@@ -229,7 +229,7 @@ export async function getProductsByArtisanId(
     FROM products p
     JOIN users u ON p.seller_id = u.id
     WHERE p.seller_id = ${artisanId}
-    ORDER BY p.id DESC
+    ORDER BY p.featured DESC, p.id DESC
   `;
   return result.map((row) => ({
     id: row.id,

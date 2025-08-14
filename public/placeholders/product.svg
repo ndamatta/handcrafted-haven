@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Product placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="boxFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e5e7eb"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="boxSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d1d5db"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="boxTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#e5e7eb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg)"/>
+
+  <!-- Soft shadow -->
+  <ellipse cx="400" cy="420" rx="180" ry="28" fill="#cbd5e1" opacity="0.4"/>
+
+  <!-- Product box (isometric-ish) -->
+  <g transform="translate(400 300)">
+    <!-- Top -->
+    <polygon points="-160,-60 0,-110 160,-60 0,-10" fill="url(#boxTop)" stroke="#94a3b8" stroke-width="3"/>
+    <!-- Front -->
+    <polygon points="-160,-60 0,-10 0,110 -160,60" fill="url(#boxFront)" stroke="#94a3b8" stroke-width="3"/>
+    <!-- Side -->
+    <polygon points="0,-10 160,-60 160,60 0,110" fill="url(#boxSide)" stroke="#94a3b8" stroke-width="3"/>
+
+    <!-- Box label -->
+    <rect x="-120" y="0" width="90" height="36" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+    <rect x="-112" y="6" width="30" height="24" rx="4" fill="#cbd5e1"/>
+    <rect x="-76" y="6" width="38" height="24" rx="4" fill="#cbd5e1" opacity="0.7"/>
+
+    <!-- Price tag hanging on corner -->
+    <g transform="translate(155,-62)">
+      <path d="M-10,-18 L0,-8" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+      <g transform="rotate(20)">
+        <path d="M0,0 L40,0 L54,18 L36,36 L0,36 Z" fill="#fde68a" stroke="#f59e0b" stroke-width="3"/>
+        <circle cx="10" cy="12" r="4" fill="#f59e0b"/>
+        <rect x="20" y="12" width="22" height="8" rx="4" fill="#f59e0b" opacity="0.8"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Subtle caption lines -->
+  <rect x="300" y="455" width="200" height="12" rx="6" fill="#cbd5e1" opacity="0.8"/>
+  <rect x="340" y="475" width="120" height="10" rx="5" fill="#d1d5db" opacity="0.8"/>
+</svg>
