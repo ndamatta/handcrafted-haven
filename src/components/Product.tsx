@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import { safeSrc } from "@/lib/imageUtils";
 import { useCart } from "./CartContext";
 
 export type ProductType = {
@@ -20,7 +21,7 @@ export default function Product({ product }: { product: ProductType }) {
     <div className="bg-stone-50 dark:bg-slate-800 rounded-xl shadow-lg p-6 flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-stone-100 dark:hover:bg-slate-700 border-2 border-transparent hover:border-amber-400 dark:hover:border-amber-300">
       <div className="relative w-32 h-32 mb-4 bg-stone-100 dark:bg-slate-700 rounded overflow-hidden flex items-center justify-center">
         <Image
-          src={product.image}
+          src={safeSrc(product.image, "product")}
           alt={product.name}
           width={100}
           height={100}

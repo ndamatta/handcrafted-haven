@@ -1,25 +1,20 @@
 'use client';
 
 import Image from "next/image";
+import { safeSrc } from "@/lib/imageUtils";
 import type { SafeUser } from "@/lib/definitions";
 
 export default function Artisan({ artisan }: { artisan: SafeUser & { product_count: number; average_rating: number | null } }) {
     return (
         <div className="bg-stone-50 dark:bg-slate-800 rounded-xl shadow-lg p-6 flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-stone-100 dark:hover:bg-slate-700 border-2 border-transparent hover:border-amber-400 dark:hover:border-amber-300">
             <div className="relative w-20 h-20 mb-4 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden flex items-center justify-center">
-                {artisan.profile_picture ? (
-                    <Image
-                        src={artisan.profile_picture}
-                        alt={artisan.name}
-                        width={128}
-                        height={128}
-                        className="object-cover w-full h-full rounded-full"
-                    />
-                ) : (
-                    <div className="w-12 h-12 bg-slate-400 dark:bg-slate-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                        {artisan.name.charAt(0).toUpperCase()}
-                    </div>
-                )}
+                <Image
+                    src={safeSrc(artisan.profile_picture ?? null, "artisan")}
+                    alt={artisan.name}
+                    width={128}
+                    height={128}
+                    className="object-cover w-full h-full rounded-full"
+                />
             </div>
 
             <h3 className="font-semibold text-lg mb-2 text-center text-slate-900 dark:text-white">

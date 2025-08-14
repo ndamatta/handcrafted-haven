@@ -3,6 +3,7 @@
 import React from 'react';
 import { useCart } from './CartContext';
 import Image from 'next/image';
+import { safeSrc } from '@/lib/imageUtils';
 
 interface CartModalProps {
   isOpen: boolean;
@@ -64,7 +65,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 <div key={item.id} className="flex items-center space-x-3 p-3 bg-stone-100 dark:bg-slate-700 rounded-lg">
                   <div className="w-16 h-16 bg-stone-200 dark:bg-slate-600 rounded overflow-hidden flex-shrink-0">
                     <Image
-                      src={item.image}
+                      src={safeSrc(item.image, 'product')}
                       alt={item.name}
                       width={64}
                       height={64}

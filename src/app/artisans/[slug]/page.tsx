@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { safeSrc } from "@/lib/imageUtils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
@@ -54,19 +55,13 @@ export default async function ArtisanProfilePage({
               <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 {/* Profile Picture Placeholder */}
                 <div className="relative w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
-                  {artisan.profile_picture ? (
-                    <Image
-                      src={artisan.profile_picture}
-                      alt={artisan.name}
-                      width={128}
-                      height={128}
-                      className="object-cover w-full h-full rounded-full"
-                    />
-                  ) : (
-                    <div className="w-20 h-20 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-2xl">
-                      {artisan.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <Image
+                    src={safeSrc(artisan.profile_picture ?? null, "artisan")}
+                    alt={artisan.name}
+                    width={128}
+                    height={128}
+                    className="object-cover w-full h-full rounded-full"
+                  />
                 </div>
 
                 {/* Artisan Info */}
