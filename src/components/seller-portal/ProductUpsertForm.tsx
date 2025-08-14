@@ -125,7 +125,6 @@ export default function ProductUpsertForm({
         <input
           name="image"
           type="url"
-          required
           value={local.image}
           onChange={(e) => setLocal({ ...local, image: e.target.value })}
           className="w-full rounded-md border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm"
