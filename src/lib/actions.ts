@@ -155,7 +155,8 @@ export async function upsertProductAction(
     price: z
       .string()
       .refine((v) => !Number.isNaN(Number(v)) && Number(v) >= 0, "Bad price"),
-    image: z.string().url("Invalid image URL"),
+    image: z.string(),
+    // .url("Invalid image URL"),
     category: z.string().min(1, "Category required"),
     featured: z.string().optional(),
   });
